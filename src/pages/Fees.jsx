@@ -77,9 +77,11 @@ const Fees = () => {
   ];
 
   return (
-    <div>
-      <h3>Fees</h3>
-      <table className="fees-table">
+    <div className="card">
+      <div className="card-body">
+        <h2 className="title">Fees Table:</h2>
+        <div className="mt-5 overflow-auto">
+          <table>
         <thead>
           <tr>
             <th>Month-Year</th>
@@ -110,8 +112,15 @@ const Fees = () => {
               </tr>
             );
           })}
+          <tr>
+            <th>Month-Year</th>
+            <th>Total Amount</th>
+            <th>Actions</th>
+          </tr>
         </tbody>
       </table>
+    </div>
+    </div>
     </div>
   );
 };

@@ -15,6 +15,7 @@ import { db } from '../firebase';
 const MemberCrud = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [role, setRole] = useState('');
   const [members, setMembers] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -69,13 +70,13 @@ const MemberCrud = () => {
 
   // Add member
   const addMember = async () => {
-    if (!name || !email || !role) {
+    if (!name || !email || !role || !phone) {
       alert('Please fill in all fields.');
       return;
     }
 
     try {
-      await addDoc(collection(db, 'members'), { name, email, role });
+      await addDoc(collection(db, 'members'), { name, email, role ,phone });
       resetForm();
     } catch (error) {
       console.error('Error adding member:', error);
@@ -86,7 +87,7 @@ const MemberCrud = () => {
   const updateMember = async (id) => {
     try {
       const memberDoc = doc(db, 'members', id);
-      await updateDoc(memberDoc, { name, email, role });
+      await updateDoc(memberDoc, { name, email, role, phone });
       resetForm();
     } catch (error) {
       console.error('Error updating member:', error);
@@ -108,6 +109,7 @@ const MemberCrud = () => {
     setName('');
     setEmail('');
     setRole('');
+    setPhone('');
     setEditingId(null);
   };
 
@@ -176,48 +178,83 @@ const MemberCrud = () => {
 
 
   return (
-    <div className="items-crud">
-      <h2 className="title">Members Management</h2>
-      <div className="form">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter member name"
-          className="input-field"
-        />
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter member email"
-          className="input-field"
-        />
-        <input
-          type="text"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          placeholder="Enter member role"
-          className="input-field"
-        />
-        {editingId ? (
-          <button onClick={() => updateMember(editingId)} className="btn update-btn">
-            Update
-          </button>
-        ) : (
-          <button onClick={addMember} className="btn add-btn">
-            Add
-          </button>
-        )}
-      </div>
+    <div className="card">
+      <div className="card-body">
+        <h2 className="title">Book Form:</h2>
+        <div className="form">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter member name"
+              className="input-field"
+            />
+            </div>
+            <div class="col-md-4 mb-3">
+            <input
+              type="phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Enter member phone"
+              className="input-field"
+            />
+            </div>
+            <div class="col-md-4 mb-3">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter member email"
+              className="input-field"
+            />
+            </div>
+            <div class="col-md-4 mb-3">
+            <input
+              type="text"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              placeholder="Enter member role"
+              className="input-field"
+            />
+            </div>
+            <div class="col-md-4 mb-3">
+              {editingId ? (
+                <button onClick={() => updateMember(editingId)} className="btn update-btn">
+                  Update
+                </button>
+              ) : (
+                <button onClick={addMember} className="btn add-btn">
+                  Add
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      
+
+
+
+
+
+
+
+
+
 
       {loading ? (
         <p className="loading">Loading members...</p>
       ) : (
-        <table className="items-table">
+      <div className="mt-5 overflow-auto">
+        {/* Book Table */}
+        <h2 className="title">Book Table:</h2>
+        <table>
           <thead>
             <tr>
               <th>Name</th>
+              <th>Mobile</th>
               <th>Email</th>
               <th>Role</th>
               <th>Actions</th>
@@ -227,37 +264,49 @@ const MemberCrud = () => {
             {members.map((member) => (
               <tr key={member.id}>
                 <td>{member.name}</td>
+                <td>{member.phone}</td>
                 <td>{member.email}</td>
                 <td>{member.role}</td>
                 <td>
-                  <button
-                    className="btn edit-btn"
-                    onClick={() => {
+                  <div className="d-flex justify-content-center align-item-center gap-1">
+                    <button
+                      className="btn action-btn  btn-sm mr-2"
+                      onClick={() => {
                       setName(member.name);
                       setEmail(member.email);
                       setRole(member.role);
                       setEditingId(member.id);
                     }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn delete-btn"
-                    onClick={() => deleteMember(member.id)}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    className="btn delete-btn"
-                    onClick={() => openFeeModal(member.id)}
-                  >
-                    Monthly Fee
-                  </button>
+                    >
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button
+                        className="btn action-btn  btn-sm mr-2"
+                        onClick={() => deleteMember(member.id)}
+                      >
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+
+                      <button
+                        className="btn action-btn  btn-sm mr-2"
+                        onClick={() => openFeeModal(member.id)}
+                      >
+                      <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                    </button>
+                  </div>  
                 </td>
               </tr>
             ))}
+            <tr>
+              <th>Name</th>
+              <th>Mobile</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
           </tbody>
         </table>
+      </div>
       )}
 
       {isModalOpen && (
@@ -284,7 +333,7 @@ const MemberCrud = () => {
                 <div>
                   <label>Month</label>
                   <select
-                    className="form-control"
+                    className="input-field"
                     value={modalMonth}
                     onChange={(e) => setModalMonth(e.target.value)}
                   >
@@ -329,6 +378,7 @@ const MemberCrud = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };

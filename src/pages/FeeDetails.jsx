@@ -22,50 +22,62 @@ const FeeDetails = () => {
   ];
 
   return (
-    <div>
-      <h4>
-        Details for {monthNames[parseInt(month) - 1]} {year}
-      </h4>
-
-      <div>
-        <h5>Members Who Paid</h5>
-        <table className="fees-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paidMembers.map((member) => (
-              <tr key={member.id}>
-                <td>{member.name}</td>
-                <td>{member.email}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div>
-        <h5>Members Who Didn't Pay</h5>
-        <table className="fees-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-          <tbody>
-            {unpaidMembers.map((member) => (
-              <tr key={member.id}>
-                <td>{member.name}</td>
-                <td>{member.email}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+     <div className="card">
+      <div className="card-body">
+        <h1>
+          {monthNames[parseInt(month) - 1]} {year} :
+        </h1>
+        <div className="row mt-5">
+          <div className="col-md-12">
+            <h5>Members Who Paid:</h5>
+            <table>
+                <tr>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                </tr>
+                {paidMembers.map((member) => (
+                  <tr key={member.id}>
+                    <td>{member.name}</td>
+                    <td>{member.phone}</td>
+                    <td>{member.email}</td>
+                  </tr>
+                ))}
+                <tr>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                </tr>
+            </table>
+          </div>
+          <div className="col-md-12 mt-5">
+            <h5>Members Who Didn't Pay:</h5>
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                {unpaidMembers.map((member) => (
+                  <tr key={member.id}>
+                    <td>{member.name}</td>
+                    <td>{member.phone}</td>
+                    <td>{member.email}</td>
+                  </tr>
+                ))}
+                <tr>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>        
+    </div>
     </div>
   );
 };

@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore';
 import { db } from '../firebase';
 
 const CategoryCrud = () => {
   const [name, setName] = useState('');
   const [categories, setCategories] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'categories'), (snapshot) => {
@@ -15,7 +21,6 @@ const CategoryCrud = () => {
         ...doc.data(),
       }));
       setCategories(fetchedCategories);
-      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -41,55 +46,66 @@ const CategoryCrud = () => {
   };
 
   return (
-    <div className="items-crud">
-      <h2 className="title">Category Management</h2>
-      <div className="form">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter category name"
-          className="input-field"
-        />
-        {editingId ? (
-          <button onClick={() => updateCategory(editingId)} className="btn update-btn">
-            Update
-          </button>
-        ) : (
-          <button onClick={addCategory} className="btn add-btn">
-            Add
-          </button>
-        )}
+    <div className="card">
+      <div className="card-body">
+        <h2 className="title">Category Management</h2>
+        <div className="form">
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter category name"
+            className="input-field mb-3"
+          />
+          {editingId ? (
+            <button onClick={() => updateCategory(editingId)} className="btn btn-warning">
+              Update
+            </button>
+          ) : (
+            <button onClick={addCategory} className="btn add-btn">
+              Add
+            </button>
+          )}
+        </div>
+        <table className="mt-4">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {categories.map((category) => (
+              <tr key={category.id}>
+                <td>{category.name}</td>
+                <td>
+                  <div className="d-flex justify-content-center align-item-center gap-1">
+                    <button
+                      className="btn action-btn  btn-sm mr-2"
+                      onClick={() => {
+                        setName(category.name);
+                        setEditingId(category.id);
+                      }}
+                    >
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button
+                      className="btn action-btn  btn-sm mr-2"
+                       onClick={() => deleteCategory(category.id)}
+                    >
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            <tr>
+              <th>Name</th>
+              <th>Actions</th>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-      {loading ? (
-        <p className="loading">Loading categories...</p>
-      ) : (
-        <ul className="items-list">
-          {categories.map((category) => (
-            <li key={category.id} className="items">
-              <span className="items-name">{category.name}</span>
-              <div className="actions">
-                <button
-                  className="btn edit-btn"
-                  onClick={() => {
-                    setName(category.name);
-                    setEditingId(category.id);
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn delete-btn"
-                  onClick={() => deleteCategory(category.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
     </div>
   );
 };

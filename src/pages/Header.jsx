@@ -29,9 +29,9 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="d-flex align-items-center justify-content-between px-4 py-3 shadow-sm bg-white">
+    <header className="d-flex bg-custom-soft align-items-center justify-content-between px-4 py-3 shadow-sm">
       {/* Logo / Title */}
-      <h1 className="h5 fw-bold" style={{ color: "#09960e", fontSize: "25px" }}>
+      <h1 className="h5 fw-bold" style={{ color: "#007604", fontSize: "25px" }}>
         Maktabatus Salam
       </h1>
 

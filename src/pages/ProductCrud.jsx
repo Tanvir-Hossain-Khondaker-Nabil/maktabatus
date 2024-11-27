@@ -162,32 +162,7 @@ const ProductCrud = () => {
     }
   };
 
-  const finishBorrowing = async (borrowId) => {
-    if (isProcessing) return; // Prevent duplicate clicks
-    setIsProcessing(true);
-
-    const borrowedProduct = borrowedProducts.find(
-      (borrowed) => borrowed.productId === borrowId
-    );
-
-    if (borrowedProduct) {
-      try {
-        // Increase quantity in Firestore
-        await updateDoc(doc(db, "products", borrowId), {
-          quantity: increment(1),
-        });
-
-        // Remove borrowed product from Firestore
-        await deleteDoc(doc(db, "borrowedProducts", borrowedProduct.id));
-      } catch (error) {
-        console.error("Error finishing borrow:", error);
-        alert("Failed to finish borrow.");
-      } finally {
-        setIsProcessing(false);
-      }
-    }
-  };
-
+  
   const resetForm = () => {
     setName("");
     setCategoryId("");
@@ -312,59 +287,26 @@ const ProductCrud = () => {
                             setSelectedProductId(product.id);
                           }}
                         >
-                          <i class="fa-solid fa-book"></i>
+                          <i class="fa-solid fa-bookmark"></i>
                         </button>
                       </div>
                     </td>
                   </tr>
                 ))}
-              </table>
-              {/* Borrowed Book Table */}
-              <table>
                 <tr>
-                  <th>Book</th>
-                  <th>Member</th>
-                  <th>Borrow Date</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
                   <th>Actions</th>
                 </tr>
-                {borrowedProducts.length > 0 ? (
-                  borrowedProducts.map((borrowed) => (
-                    <tr key={borrowed.productId} className="mt-3">
-                      <td>{borrowed.productName}</td>
-                      <td>
-                        {members.find(
-                          (member) => member.id === borrowed.memberId
-                        )?.name || "N/A"}
-                      </td>
-                      <td>
-                        {new Date(borrowed.borrowDate).toLocaleDateString()}
-                      </td>
-                      <td>
-                        <div className="d-flex justify-content-center align-item-center">
-                          <button
-                            className="btn action-btn  btn-sm"
-                            onClick={() => finishBorrowing(borrowed.productId)}
-                          >
-                            <i class="fa-solid fa-xmark"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" className="no-data">
-                      No borrowed products available.
-                    </td>
-                  </tr>
-                )}
               </table>
             </div>
           )}
 
           {/* Bootstrap Modal for Borrowing */}
           {isModalOpen && (
-            <div className="modal show" style={{ display: "block" }}>
+            <div className="modal show" style={{ display: 'block' }}>
               <div className="modal-dialog">
                 <div className="modal-content">
                   <div className="modal-header">
@@ -378,18 +320,20 @@ const ProductCrud = () => {
                     </button>
                   </div>
                   <div className="modal-body">
-                    <select
-                      className="form-control"
-                      value={modalMemberId}
-                      onChange={(e) => setModalMemberId(e.target.value)}
-                    >
-                      <option value="">Select Member</option>
-                      {members.map((member) => (
-                        <option key={member.id} value={member.id}>
-                          {member.name}
-                        </option>
-                      ))}
-                    </select>
+                      <div>
+                        <select
+                          className="input-field"
+                          value={modalMemberId}
+                          onChange={(e) => setModalMemberId(e.target.value)}
+                        >
+                          <option value="">Select Member</option>
+                          {members.map((member) => (
+                            <option key={member.id} value={member.id}>
+                              {member.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                   </div>
                   <div className="modal-footer">
                     <button

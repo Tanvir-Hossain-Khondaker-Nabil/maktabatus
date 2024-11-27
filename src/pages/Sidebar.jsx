@@ -8,14 +8,14 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <aside className="d-flex flex-column vh-100 bg-light shadow-sm">
+    <aside className="d-flex flex-column bg-light shadow-sm">
       <nav className="flex-grow-1">
         <ul className="nav flex-column px-3">
           <li className="nav-item mb-3">
             <Link
               to="/"
-              className={`nav-link d-flex align-items-center px-3 py-2 ${
-                isActive("/") ? "text-white bg-success shadow-sm" : "text-secondary"
+              className={`d-flex align-items-center px-3 py-2 ${
+                isActive("/") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
               }`}
             >
               <i className="fa-solid fa-house me-2"></i> Home
@@ -24,8 +24,8 @@ const Sidebar = () => {
           <li className="nav-item mb-3">
             <Link
               to="/borrow-books"
-              className={`nav-link d-flex align-items-center px-3 py-2 ${
-                isActive("/borrow-books") ? "text-white bg-success shadow-sm" : "text-secondary"
+              className={`d-flex align-items-center px-3 py-2 ${
+                isActive("/borrow-books") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
               }`}
             >
               <i className="fa-solid fa-book me-2"></i> Borrow Books
@@ -34,8 +34,8 @@ const Sidebar = () => {
           <li className="nav-item mb-3">
             <Link
               to="/categories"
-              className={`nav-link d-flex align-items-center px-3 py-2 ${
-                isActive("/categories") ? "text-white bg-success shadow-sm" : "text-secondary"
+              className={`d-flex align-items-center px-3 py-2 ${
+                isActive("/categories") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
               }`}
             >
               <i className="fa-solid fa-tags me-2"></i> Categories
@@ -44,8 +44,8 @@ const Sidebar = () => {
           <li className="nav-item mb-3">
             <Link
               to="/members"
-              className={`nav-link d-flex align-items-center px-3 py-2 ${
-                isActive("/members") ? "text-white bg-success shadow-sm" : "text-secondary"
+              className={`d-flex align-items-center px-3 py-2 ${
+                isActive("/members") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
               }`}
             >
               <i className="fa-solid fa-users me-2"></i> Members
@@ -54,11 +54,11 @@ const Sidebar = () => {
           <li className="nav-item mb-3">
             <Link
               to="/fees"
-              className={`nav-link d-flex align-items-center px-3 py-2 ${
-                isActive("/members") ? "text-white bg-success shadow-sm" : "text-secondary"
+              className={`d-flex align-items-center px-3 py-2 ${
+                isActive("/fees") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
               }`}
             >
-              <i className="fa-solid fa-users me-2"></i> Fees
+              <i class="fa-solid fa-piggy-bank me-2"></i>Fees
             </Link>
           </li>
         </ul>

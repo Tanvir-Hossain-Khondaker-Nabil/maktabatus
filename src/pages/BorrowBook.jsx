@@ -1,14 +1,13 @@
-// BorrowedProductsTable.js
-import React, { useState, useEffect } from "react";
-import { collection, onSnapshot, updateDoc, doc, deleteDoc } from "firebase/firestore";
-import { db } from "../firebase"; // Ensure Firebase is set up correctly
+import React, { useEffect, useState } from "react";
+import { collection, onSnapshot, updateDoc, deleteDoc, doc, increment } from "firebase/firestore";
+import { db } from "../firebase";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-const BorrowedProductsTable = () => {
+const BorrowBook = () => {
   const [borrowedProducts, setBorrowedProducts] = useState([]);
   const [members, setMembers] = useState([]);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [products, setProducts] = useState([]);
 
-  // Fetch borrowed products from Firestore
   useEffect(() => {
     const unsubscribeBorrowedProducts = onSnapshot(
       collection(db, "borrowedProducts"),
@@ -21,98 +20,102 @@ const BorrowedProductsTable = () => {
       }
     );
 
-    const unsubscribeMembers = onSnapshot(
-      collection(db, "members"),
-      (snapshot) => {
-        const fetchedMembers = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setMembers(fetchedMembers);
-      }
-    );
+    const unsubscribeMembers = onSnapshot(collection(db, "members"), (snapshot) => {
+      const fetchedMembers = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setMembers(fetchedMembers);
+    });
 
-    // Cleanup the listeners when component unmounts
+    const unsubscribeProducts = onSnapshot(collection(db, "products"), (snapshot) => {
+      const fetchedProducts = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setProducts(fetchedProducts);
+    });
+
     return () => {
       unsubscribeBorrowedProducts();
       unsubscribeMembers();
+      unsubscribeProducts();
     };
   }, []);
 
-  // Format date
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString(); // Customize the format as needed
-  };
-
-  // Finish borrowing (increase product quantity and remove borrowed record)
   const finishBorrowing = async (borrowId) => {
-    if (isProcessing) return; // Prevent duplicate clicks
-    setIsProcessing(true);
-
     const borrowedProduct = borrowedProducts.find(
       (borrowed) => borrowed.productId === borrowId
     );
 
     if (borrowedProduct) {
       try {
-        // Increase quantity of the product in Firestore
         await updateDoc(doc(db, "products", borrowId), {
-          quantity: 1, // assuming you want to increase the quantity by 1
+          quantity: increment(1),
         });
 
-        // Remove borrowed product from Firestore
         await deleteDoc(doc(db, "borrowedProducts", borrowedProduct.id));
       } catch (error) {
         console.error("Error finishing borrow:", error);
         alert("Failed to finish borrow.");
-      } finally {
-        setIsProcessing(false);
       }
     }
   };
 
   return (
-    <div>
-      <h3 className="my-3">Borrowed Products</h3>
-      <table className="table table-bordered table-striped">
-        <thead className="thead-dark">
-          <tr>
-            <th>Product</th>
-            <th>Member</th>
-            <th>Borrow Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {borrowedProducts.length > 0 ? (
-            borrowedProducts.map((borrowed) => (
-              <tr key={borrowed.productId}>
-                <td>{borrowed.productName}</td>
-                <td>
-                  {members.find((member) => member.id === borrowed.memberId)
-                    ?.name || "N/A"}
-                </td>
-                <td>{formatDate(borrowed.borrowDate)}</td>
-                <td>
-                  <button
-                    className="btn btn-success btn-sm"
-                    onClick={() => finishBorrowing(borrowed.productId)}
-                  >
-                    Finish Borrow
-                  </button>
-                </td>
+    <div className="card">
+      <div className="card-body">
+        <h2 className="title">Borrow Table:</h2>
+        <div className="mt-5 overflow-auto">
+          <table>
+              <tr>
+                <th>Book</th>
+                <th>Member</th>
+                <th>Borrow Date</th>
+                <th>Actions</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4">No borrowed products available.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+              {borrowedProducts.length > 0 ? (
+                borrowedProducts.map((borrowed) => (
+                  <tr key={borrowed.id}>
+                    <td>{borrowed.productName}</td>
+                    <td>
+                      {members.find((member) => member.id === borrowed.memberId)?.name || "N/A"}
+                    </td>
+                    <td>
+                      {new Date(borrowed.borrowDate).toLocaleDateString()}
+                    </td>
+                    <td>
+                      <div className="d-flex justify-content-center align-item-center">
+                          <button
+                            className="btn action-btn"
+                            onClick={() => finishBorrowing(borrowed.productId)}
+                          >
+                            <i class="fa-solid fa-xmark"></i>
+                          </button>
+                      </div>
+                    </td>
+                  </tr>
+
+                ))
+
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center">
+                    No borrowed books found.
+                  </td>
+                </tr>
+              )} 
+              <tr>
+                <th>Book</th>
+                <th>Member</th>
+                <th>Borrow Date</th>
+                <th>Actions</th>
+              </tr>
+                    </table>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default BorrowedProductsTable;
+export default BorrowBook;
