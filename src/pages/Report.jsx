@@ -187,7 +187,7 @@ const Report = () => {
           </div>
           <div className="col-md-4 d-flex align-items-end">
             <button className="btn add-btn mb-4" onClick={generatePDF}>
-              Download PDF
+              PDF
             </button>
           </div>
         </div>

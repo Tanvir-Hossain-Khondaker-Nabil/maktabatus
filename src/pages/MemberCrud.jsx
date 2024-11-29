@@ -180,7 +180,7 @@ const MemberCrud = () => {
   return (
     <div className="card">
       <div className="card-body">
-        <h2 className="title">Member Management</h2>
+        <h2 className="title">Book Form:</h2>
         <div className="form">
           <div class="row">
             <div class="col-md-4 mb-3">
@@ -245,9 +245,11 @@ const MemberCrud = () => {
 
 
       {loading ? (
-        <p className="loading"></p>
+        <p className="loading">Loading members...</p>
       ) : (
       <div className="mt-5 overflow-auto">
+        {/* Book Table */}
+        <h2 className="title">Book Table:</h2>
         <table>
           <thead>
             <tr>
@@ -291,12 +293,17 @@ const MemberCrud = () => {
                       >
                       <i class="fa-solid fa-bangladeshi-taka-sign"></i>
                     </button>
-
-                    
                   </div>  
                 </td>
               </tr>
             ))}
+            <tr>
+              <th>Name</th>
+              <th>Mobile</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -332,7 +339,7 @@ const MemberCrud = () => {
                   >
                     <option value="">Select Month</option>
                     {monthNames.map((month, index) => (
-                      <option key={index} value={month}>{month}</option>
+                      <option key={index} value={index + 1}>{month}</option>
                     ))}
                   </select>
                 </div>
@@ -371,7 +378,6 @@ const MemberCrud = () => {
           </div>
         </div>
       )}
-
     </div>
     </div>
   );

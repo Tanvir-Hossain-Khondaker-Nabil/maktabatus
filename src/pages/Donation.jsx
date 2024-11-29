@@ -165,7 +165,7 @@ const Donation = () => {
 
               <div className="col-md-4 mb-3">
                 <button type="submit" className="btn add-btn">
-                  Submit
+                  Add
                 </button>
               </div>
             </div>
