@@ -25,7 +25,7 @@ const MemberCrud = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMemberId, setModalMemberId] = useState('');
   const [modalMonth, setModalMonth] = useState('');
-  const [modalAmount] = useState(50);  // Fixed fee amount
+  const [modalAmount, setModalAmount] = useState(50); // Set as state to allow changes
   const [modalYear, setModalYear] = useState('');
   const [fees, setFees] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -76,7 +76,7 @@ const MemberCrud = () => {
     }
 
     try {
-      await addDoc(collection(db, 'members'), { name, email, role ,phone });
+      await addDoc(collection(db, 'members'), { name, email, role, phone });
       resetForm();
     } catch (error) {
       console.error('Error adding member:', error);
@@ -119,15 +119,16 @@ const MemberCrud = () => {
     if (member) {
       setModalMemberId(member.id);
       setModalMonth('');
-      setModalYear(new Date().getFullYear());  // Set current year
+      setModalYear(new Date().getFullYear()); // Set current year
       setIsModalOpen(true);
+      setModalAmount(50); // Reset to default amount (50)
     }
   };
 
   // Close the fee modal
   const closeFeeModal = () => {
     setIsModalOpen(false);
-    setErrorMessage('');  // Reset error message on modal close
+    setErrorMessage(''); // Reset error message on modal close
   };
 
   // Check if a fee already exists for the member in the same month and year
@@ -161,7 +162,7 @@ const MemberCrud = () => {
         memberId: modalMemberId,
         month: modalMonth,
         year: modalYear,
-        amount: modalAmount, // Fixed amount
+        amount: modalAmount, // Use the dynamic amount
       });
       closeFeeModal();
     } catch (error) {
@@ -169,58 +170,55 @@ const MemberCrud = () => {
     }
   };
 
-
   // Generate month names
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December'
   ];
 
-
   return (
     <div className="card">
       <div className="card-body">
         <h2 className="title">Member Management</h2>
         <div className="form">
-          <div class="row">
-            <div class="col-md-4 mb-3">
-
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter member name"
-              className="input-field"
-            />
+          <div className="row">
+            <div className="col-md-4 mb-3">
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter member name"
+                className="input-field"
+              />
             </div>
-            <div class="col-md-4 mb-3">
-            <input
-              type="phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="Enter member phone"
-              className="input-field"
-            />
+            <div className="col-md-4 mb-3">
+              <input
+                type="phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Enter member phone"
+                className="input-field"
+              />
             </div>
-            <div class="col-md-4 mb-3">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter member email"
-              className="input-field"
-            />
+            <div className="col-md-4 mb-3">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter member email"
+                className="input-field"
+              />
             </div>
-            <div class="col-md-4 mb-3">
-            <input
-              type="text"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              placeholder="Enter member role"
-              className="input-field"
-            />
+            <div className="col-md-4 mb-3">
+              <input
+                type="text"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                placeholder="Enter member role"
+                className="input-field"
+              />
             </div>
-            <div class="col-md-4 mb-3">
+            <div className="col-md-4 mb-3">
               {editingId ? (
                 <button onClick={() => updateMember(editingId)} className="btn update-btn">
                   Update
@@ -233,153 +231,142 @@ const MemberCrud = () => {
             </div>
           </div>
         </div>
-      
 
+        {loading ? (
+          <p className="loading"></p>
+        ) : (
+          <div className="mt-5 overflow-auto">
+            {/* Member Table */}
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {members.length > 0 ? (
+                  members.map((member) => (
+                    <tr key={member.id}>
+                      <td>{member.name}</td>
+                      <td>{member.phone}</td>
+                      <td>{member.email}</td>
+                      <td>{member.role}</td>
+                      <td>
+                        <div className="d-flex justify-content-center align-item-center gap-1">
+                          <button
+                            className="btn action-btn  btn-sm mr-2"
+                            onClick={() => {
+                              setName(member.name);
+                              setEmail(member.email);
+                              setRole(member.role);
+                              setEditingId(member.id);
+                            }}
+                          >
+                            <i className="fa-solid fa-pen-to-square"></i>
+                          </button>
+                          <button
+                            className="btn action-btn  btn-sm mr-2"
+                            onClick={() => deleteMember(member.id)}
+                          >
+                            <i className="fa-solid fa-trash"></i>
+                          </button>
 
-
-
-
-
-
-
-
-
-      {loading ? (
-        <p className="loading"></p>
-      ) : (
-      <div className="mt-5 overflow-auto">
-        {/* Book Table */}
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Mobile</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-          {members.length > 0 ? (
-            members.map((member) => (
-              <tr key={member.id}>
-                <td>{member.name}</td>
-                <td>{member.phone}</td>
-                <td>{member.email}</td>
-                <td>{member.role}</td>
-                <td>
-                  <div className="d-flex justify-content-center align-item-center gap-1">
-                    <button
-                      className="btn action-btn  btn-sm mr-2"
-                      onClick={() => {
-                      setName(member.name);
-                      setEmail(member.email);
-                      setRole(member.role);
-                      setEditingId(member.id);
-                    }}
-                    >
-                      <i class="fa-solid fa-pen-to-square"></i>
-                    </button>
-                    <button
-                        className="btn action-btn  btn-sm mr-2"
-                        onClick={() => deleteMember(member.id)}
-                      >
-                        <i class="fa-solid fa-trash"></i>
-                      </button>
-
-                      <button
-                        className="btn action-btn  btn-sm mr-2"
-                        onClick={() => openFeeModal(member.id)}
-                      >
-                      <i class="fa-solid fa-bangladeshi-taka-sign"></i>
-                    </button>
-                  </div>  
-                </td>
-              </tr>
-            ))
-
-              ) : (
-                    <tr>
-                      <td colSpan="5" className="text-center">
-                        No borrowed books found.
+                          <button
+                            className="btn action-btn  btn-sm mr-2"
+                            onClick={() => openFeeModal(member.id)}
+                          >
+                            <i className="fa-solid fa-bangladeshi-taka-sign"></i>
+                          </button>
+                        </div>
                       </td>
                     </tr>
-                  )}
-          </tbody>
-        </table>
-      </div>
-      )}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center">
+                      No members found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-      {isModalOpen && (
-        <div className="modal show" style={{ display: 'block' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Add Monthly Fee</h5>
-                <button type="button" className="close" onClick={closeFeeModal}>
-                  &times;
-                </button>
-              </div>
-              <div className="modal-body">
-                <div>
-                  <label>Member</label>
-                  <input
-                    type="text"
-                    value={members.find((m) => m.id === modalMemberId)?.name || ''}
-                    readOnly
-                    className="input-field"
-                  />
+        {isModalOpen && (
+          <div className="modal show" style={{ display: 'block' }}>
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Add Monthly Fee</h5>
+                  <button type="button" className="close" onClick={closeFeeModal}>
+                    &times;
+                  </button>
                 </div>
+                <div className="modal-body">
+                  <div>
+                    <label>Member</label>
+                    <input
+                      type="text"
+                      value={members.find((m) => m.id === modalMemberId)?.name || ''}
+                      readOnly
+                      className="input-field"
+                    />
+                  </div>
 
-                <div>
-                  <label>Month</label>
-                  <select
-                    className="input-field"
-                    value={modalMonth}
-                    onChange={(e) => setModalMonth(e.target.value)}
+                  <div>
+                    <label>Month</label>
+                    <select
+                      className="input-field"
+                      value={modalMonth}
+                      onChange={(e) => setModalMonth(e.target.value)}
+                    >
+                      <option value="">Select Month</option>
+                      {monthNames.map((month, index) => (
+                        <option key={index} value={month}>{month}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label>Year</label>
+                    <input
+                      type="number"
+                      value={modalYear}
+                      readOnly
+                      className="input-field"
+                    />
+                  </div>
+
+                  <div>
+                    <label>Amount</label>
+                    <input
+                      type="number"
+                      value={modalAmount}
+                      onChange={(e) => setModalAmount(e.target.value)} // Allow change in amount
+                      className="input-field"
+                    />
+                  </div>
+
+                  {errorMessage && <p className="error">{errorMessage}</p>}
+                </div>
+                <div className="modal-footer">
+                  <button
+                    className="btn add-btn"
+                    onClick={addFee}
                   >
-                    <option value="">Select Month</option>
-                    {monthNames.map((month, index) => (
-                      <option key={index} value={month}>{month}</option>
-                    ))}
-                  </select>
+                    Confirm Fee
+                  </button>
                 </div>
-
-                <div>
-                  <label>Year</label>
-                  <input
-                    type="number"
-                    value={modalYear}
-                    readOnly
-                    className="input-field"
-                  />
-                </div>
-
-                <div>
-                  <label>Amount</label>
-                  <input
-                    type="number"
-                    value={modalAmount}
-                    readOnly
-                    className="input-field"
-                  />
-                </div>
-
-                {errorMessage && <p className="error">{errorMessage}</p>}
-              </div>
-              <div className="modal-footer">
-                <button
-                  className="btn add-btn"
-                  onClick={addFee}
-                >
-                  Confirm Fee
-                </button>
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -52,7 +52,7 @@ const FeeDetails = () => {
     <div className="card">
       <div className="card-body">
         <h1>
-          {monthNames[parseInt(month) - 1]} {year} :
+          {month} {year} :
         </h1>
         <div className="row mt-5">
           <div className="col-md-12">

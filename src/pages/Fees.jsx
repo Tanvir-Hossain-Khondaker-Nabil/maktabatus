@@ -32,7 +32,8 @@ const Fees = () => {
       if (!groups[monthYearKey]) {
         groups[monthYearKey] = [];
       }
-      groups[monthYearKey].push(fee);
+      // Ensure that the amount is treated as a number
+      groups[monthYearKey].push({ ...fee, amount: parseFloat(fee.amount) });
       return groups;
     }, {});
   };
@@ -41,7 +42,7 @@ const Fees = () => {
 
   const viewDetails = (month, year) => {
     const paidMemberIds = fees
-      .filter((fee) => fee.month === month && fee.year === year)
+      .filter((fee) => fee.month === month && fee.year === year )
       .map((fee) => fee.memberId);
 
     const paidMembers = members.filter((member) =>
@@ -62,18 +63,8 @@ const Fees = () => {
   };
 
   const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December',
   ];
 
   return (
@@ -82,41 +73,43 @@ const Fees = () => {
         <h2 className="title">Fees Management</h2>
         <div className="mt-5 overflow-auto">
           <table>
-        <thead>
-          <tr>
-            <th>Month-Year</th>
-            <th>Total Amount</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.keys(groupedFees).map((monthYearKey) => {
-            const [month, year] = monthYearKey.split('-');
-            const group = groupedFees[monthYearKey];
-            const totalAmount = group.reduce((sum, fee) => sum + fee.amount, 0);
-
-            return (
-              <tr key={monthYearKey}>
-                <td>
-                  {month} {year}
-                </td>
-
-                <td>{totalAmount}</td>
-                <td>
-                  <button
-                    className="btn view-btn"
-                    onClick={() => viewDetails(month, parseInt(year))}
-                  >
-                    View
-                  </button>
-                </td>
+            <thead>
+              <tr>
+                <th>Month-Year</th>
+                <th>Total Amount</th>
+                <th>Actions</th>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-    </div>
+            </thead>
+            <tbody>
+              {Object.keys(groupedFees).map((monthYearKey) => {
+                const [month, year] = monthYearKey.split('-');
+                const group = groupedFees[monthYearKey];
+                
+                // Calculate the total amount correctly
+                const totalAmount = group.reduce((sum, fee) => sum + fee.amount, 0);
+
+                return (
+                  <tr key={monthYearKey}>
+                    <td>
+                      {month} {year}
+                    </td>
+
+                    <td>{totalAmount.toFixed(2)}</td> {/* Display total amount rounded to 2 decimals */}
+                    <td>
+                      <button
+                        className="btn view-btn"
+                        onClick={() => viewDetails(month, parseInt(year))}
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };

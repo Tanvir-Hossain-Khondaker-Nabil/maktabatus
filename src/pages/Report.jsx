@@ -22,6 +22,7 @@ const Report = () => {
 
   const years = ['2021', '2022', '2023', '2024'];
 
+  // Fetch the data whenever the selected month or year changes
   useEffect(() => {
     if (selectedMonth && selectedYear) {
       fetchFeesData(selectedMonth, selectedYear);
@@ -30,6 +31,7 @@ const Report = () => {
     }
   }, [selectedMonth, selectedYear]);
 
+  // Fetch fees data from Firestore
   const fetchFeesData = async (month, year) => {
     try {
       const feesQuery = query(
@@ -44,7 +46,10 @@ const Report = () => {
         ...doc.data(),
       }));
 
-      const total = feesData.reduce((sum, fee) => sum + fee.amount, 0);
+      console.log("Fetched Fees Data:", feesData); // Debugging line
+
+      // Ensure the amount is a valid number
+      const total = feesData.reduce((sum, fee) => sum + (parseFloat(fee.amount) || 0), 0);
 
       setFees(feesData);
       setTotalFees(total);
@@ -53,6 +58,7 @@ const Report = () => {
     }
   };
 
+  // Fetch costs data from Firestore
   const fetchCostsData = async (month, year) => {
     try {
       const costsQuery = query(
@@ -71,37 +77,39 @@ const Report = () => {
     }
   };
 
+  // Fetch donations data from Firestore
   const fetchDonationsData = async (month, year) => {
-  try {
-    const donationsQuery = query(
-      collection(db, 'donations'),
-      where('month', '==', month),
-      where('year', '==', parseInt(year))
-    );
-    const donationsSnapshot = await getDocs(donationsQuery);
+    try {
+      const donationsQuery = query(
+        collection(db, 'donations'),
+        where('month', '==', month),
+        where('year', '==', parseInt(year))
+      );
+      const donationsSnapshot = await getDocs(donationsQuery);
 
-    console.log("Donations Snapshot:", donationsSnapshot);  // Logs the entire snapshot
+      console.log("Donations Snapshot:", donationsSnapshot); // Debugging line
 
-    if (!donationsSnapshot.empty) {
-      const donationsData = donationsSnapshot.docs.map((doc) => doc.data());
-      console.log("Donations Data:", donationsData);  // Logs the data
+      if (!donationsSnapshot.empty) {
+        const donationsData = donationsSnapshot.docs.map((doc) => doc.data());
+        console.log("Donations Data:", donationsData); // Debugging line
 
-      const total = donationsData.reduce((sum, donation) => sum + parseFloat(donation.amount), 0);
-      setDonations(donationsData);
-      setTotalDonations(total);
-    } else {
-      console.log('No donations found for the selected month/year');
+        const total = donationsData.reduce((sum, donation) => sum + parseFloat(donation.amount), 0);
+        setDonations(donationsData);
+        setTotalDonations(total);
+      } else {
+        console.log('No donations found for the selected month/year');
+      }
+    } catch (error) {
+      console.error('Error fetching donations data:', error);
     }
-  } catch (error) {
-    console.error('Error fetching donations data:', error);
-  }
-};
+  };
 
-
+  // Calculate profit/loss after fetching data
   useEffect(() => {
     setProfitLoss(totalFees + totalDonations - totalCosts);
   }, [totalFees, totalCosts, totalDonations]);
 
+  // Generate PDF report
   const generatePDF = () => {
     const doc = new jsPDF();
 
@@ -205,22 +213,21 @@ const Report = () => {
               </tr>
             </thead>
             <tbody>
-            {fees.length > 0 ? (
-              fees.map((fee, index) => (
-                <tr key={index}>
-                  <td>{fee.month}</td>
-                  <td>{fee.year}</td>
-                  <td>{fee.amount} tk</td>
-                </tr>
-              ))
-
+              {fees.length > 0 ? (
+                fees.map((fee, index) => (
+                  <tr key={index}>
+                    <td>{fee.month}</td>
+                    <td>{fee.year}</td>
+                    <td>{fee.amount} tk</td>
+                  </tr>
+                ))
               ) : (
-                    <tr>
-                      <td colSpan="5" className="text-center">
-                        No borrowed books found.
-                      </td>
-                    </tr>
-                  )}
+                <tr>
+                  <td colSpan="3" className="text-center">
+                    No fees found for the selected month/year.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
           <h5>Total Fees: {totalFees} tk</h5>
@@ -236,22 +243,21 @@ const Report = () => {
               </tr>
             </thead>
             <tbody>
-            {donations.length > 0 ? (
-              donations.map((donation, index) => (
-                <tr key={index}>
-                  <td>{donation.month}</td>
-                  <td>{donation.year}</td>
-                  <td>{donation.amount} tk</td>
-                </tr>
-              ))
-
+              {donations.length > 0 ? (
+                donations.map((donation, index) => (
+                  <tr key={index}>
+                    <td>{donation.month}</td>
+                    <td>{donation.year}</td>
+                    <td>{donation.amount} tk</td>
+                  </tr>
+                ))
               ) : (
-                    <tr>
-                      <td colSpan="5" className="text-center">
-                        No borrowed books found.
-                      </td>
-                    </tr>
-                  )}
+                <tr>
+                  <td colSpan="3" className="text-center">
+                    No donations found for the selected month/year.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
           <h5>Total Donations: {totalDonations} tk</h5>
@@ -269,24 +275,23 @@ const Report = () => {
               </tr>
             </thead>
             <tbody>
-            {costs.length > 0 ? (
-              costs.map((cost, index) => (
-                <tr key={index}>
-                  <td>{cost.name}</td>
-                  <td>{cost.month}</td>
-                  <td>{cost.year}</td>
-                  <td>{cost.type}</td>
-                  <td>{cost.amount} tk</td>
-                </tr>
-              ))
-
+              {costs.length > 0 ? (
+                costs.map((cost, index) => (
+                  <tr key={index}>
+                    <td>{cost.name}</td>
+                    <td>{cost.month}</td>
+                    <td>{cost.year}</td>
+                    <td>{cost.type}</td>
+                    <td>{cost.amount} tk</td>
+                  </tr>
+                ))
               ) : (
-                    <tr>
-                      <td colSpan="5" className="text-center">
-                        No borrowed books found.
-                      </td>
-                    </tr>
-                  )}
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    No costs found for the selected month/year.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
           <h5>Total Costs: {totalCosts} tk</h5>
