@@ -187,7 +187,8 @@ const Donation = () => {
                 </tr>
               </thead>
               <tbody>
-                {donations.map((donation) => (
+              {donations.length > 0 ? (
+                donations.map((donation) => (
                   <tr key={donation.id}>
                     <td>{donation.name}</td>
                     <td>{donation.mobile}</td>
@@ -202,7 +203,15 @@ const Donation = () => {
                       </button>
                     </td>
                   </tr>
-                ))}
+                ))
+
+              ) : (
+                    <tr>
+                      <td colSpan="6" className="text-center">
+                        No borrowed books found.
+                      </td>
+                    </tr>
+                  )}
               </tbody>
             </table>
         </div>

@@ -200,7 +200,8 @@ const CostCrud = () => {
               </tr>
             </thead>
             <tbody>
-              {costs.map((cost) => (
+            {costs.length > 0 ? (
+              costs.map((cost) => (
                 <tr key={cost.id}>
                   <td>{cost.name}</td>
                   <td>{cost.type}</td>
@@ -235,7 +236,15 @@ const CostCrud = () => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+
+              ) : (
+                    <tr>
+                      <td colSpan="7" className="text-center">
+                        No borrowed books found.
+                      </td>
+                    </tr>
+                  )}
             </tbody>
           </table>
         </div>

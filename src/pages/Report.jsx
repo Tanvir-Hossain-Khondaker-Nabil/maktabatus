@@ -205,13 +205,22 @@ const Report = () => {
               </tr>
             </thead>
             <tbody>
-              {fees.map((fee, index) => (
+            {fees.length > 0 ? (
+              fees.map((fee, index) => (
                 <tr key={index}>
                   <td>{fee.month}</td>
                   <td>{fee.year}</td>
                   <td>{fee.amount} tk</td>
                 </tr>
-              ))}
+              ))
+
+              ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center">
+                        No borrowed books found.
+                      </td>
+                    </tr>
+                  )}
             </tbody>
           </table>
           <h5>Total Fees: {totalFees} tk</h5>
@@ -227,13 +236,22 @@ const Report = () => {
               </tr>
             </thead>
             <tbody>
-              {donations.map((donation, index) => (
+            {donations.length > 0 ? (
+              donations.map((donation, index) => (
                 <tr key={index}>
                   <td>{donation.month}</td>
                   <td>{donation.year}</td>
                   <td>{donation.amount} tk</td>
                 </tr>
-              ))}
+              ))
+
+              ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center">
+                        No borrowed books found.
+                      </td>
+                    </tr>
+                  )}
             </tbody>
           </table>
           <h5>Total Donations: {totalDonations} tk</h5>
@@ -251,7 +269,8 @@ const Report = () => {
               </tr>
             </thead>
             <tbody>
-              {costs.map((cost, index) => (
+            {costs.length > 0 ? (
+              costs.map((cost, index) => (
                 <tr key={index}>
                   <td>{cost.name}</td>
                   <td>{cost.month}</td>
@@ -259,7 +278,15 @@ const Report = () => {
                   <td>{cost.type}</td>
                   <td>{cost.amount} tk</td>
                 </tr>
-              ))}
+              ))
+
+              ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center">
+                        No borrowed books found.
+                      </td>
+                    </tr>
+                  )}
             </tbody>
           </table>
           <h5>Total Costs: {totalCosts} tk</h5>

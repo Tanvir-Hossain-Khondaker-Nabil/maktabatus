@@ -249,7 +249,8 @@ const ProductCrud = () => {
                   <th>Quantity</th>
                   <th>Actions</th>
                 </tr>
-                {products.map((product) => (
+              {products.length > 0 ? (
+                products.map((product) => (
                   <tr key={product.id}>
                     <td>{product.name}</td>
                     <td>
@@ -290,7 +291,15 @@ const ProductCrud = () => {
                       </div>
                     </td>
                   </tr>
-                ))}
+                  ))
+
+              ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center">
+                        No borrowed books found.
+                      </td>
+                    </tr>
+                  )}
               </table>
             </div>
           )}

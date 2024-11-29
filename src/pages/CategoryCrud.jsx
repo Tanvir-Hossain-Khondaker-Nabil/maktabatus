@@ -108,7 +108,8 @@ const CategoryCrud = () => {
             </tr>
           </thead>
           <tbody>
-            {categories.map((category) => (
+          {categories.length > 0 ? (
+            categories.map((category) => (
               <tr key={category.id}>
                 <td>{category.name}</td>
                 <td>
@@ -131,7 +132,17 @@ const CategoryCrud = () => {
                   </div>
                 </td>
               </tr>
-            ))}
+            
+            ))
+
+              ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center">
+                        No borrowed books found.
+                      </td>
+                    </tr>
+                  )}
+
           </tbody>
         </table>
       </div>

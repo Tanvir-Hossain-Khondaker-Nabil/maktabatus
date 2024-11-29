@@ -180,7 +180,7 @@ const MemberCrud = () => {
   return (
     <div className="card">
       <div className="card-body">
-        <h2 className="title">Book Form:</h2>
+        <h2 className="title">Member Management</h2>
         <div className="form">
           <div class="row">
             <div class="col-md-4 mb-3">
@@ -245,11 +245,10 @@ const MemberCrud = () => {
 
 
       {loading ? (
-        <p className="loading">Loading members...</p>
+        <p className="loading"></p>
       ) : (
       <div className="mt-5 overflow-auto">
         {/* Book Table */}
-        <h2 className="title">Book Table:</h2>
         <table>
           <thead>
             <tr>
@@ -261,7 +260,8 @@ const MemberCrud = () => {
             </tr>
           </thead>
           <tbody>
-            {members.map((member) => (
+          {members.length > 0 ? (
+            members.map((member) => (
               <tr key={member.id}>
                 <td>{member.name}</td>
                 <td>{member.phone}</td>
@@ -296,14 +296,15 @@ const MemberCrud = () => {
                   </div>  
                 </td>
               </tr>
-            ))}
-            <tr>
-              <th>Name</th>
-              <th>Mobile</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Actions</th>
-            </tr>
+            ))
+
+              ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center">
+                        No borrowed books found.
+                      </td>
+                    </tr>
+                  )}
           </tbody>
         </table>
       </div>

@@ -67,7 +67,8 @@ const FeeDetails = () => {
                 </tr>
               </thead>
               <tbody>
-                {paidMembers.map((member) => (
+              {paidMembers.length > 0 ? (
+                paidMembers.map((member) => (
                   <tr key={member.id}>
                     <td>{member.name}</td>
                     <td>{member.phone}</td>
@@ -81,7 +82,15 @@ const FeeDetails = () => {
                       </button>
                     </td>
                   </tr>
-                ))}
+                ))
+
+              ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center">
+                        No borrowed books found.
+                      </td>
+                    </tr>
+                  )}
               </tbody>
             </table>
           </div>
@@ -96,13 +105,23 @@ const FeeDetails = () => {
                 </tr>
               </thead>
               <tbody>
-                {unpaidMembers.map((member) => (
+              {unpaidMembers.length > 0 ? (
+                unpaidMembers.map((member) => (
                   <tr key={member.id}>
                     <td>{member.name}</td>
                     <td>{member.phone}</td>
                     <td>{member.email}</td>
                   </tr>
-                ))}
+                ))
+
+              ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center">
+                        No borrowed books found.
+                      </td>
+                    </tr>
+                  )}
+
               </tbody>
             </table>
           </div>

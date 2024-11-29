@@ -8,6 +8,7 @@ import MemberCrud from "./pages/MemberCrud";
 import CategoryCrud from "./pages/CategoryCrud";
 import BorrowBook from "./pages/BorrowBook";
 import CostCrud from "./pages/CostCrud";
+import Home from "./pages/Home";
 import Report from "./pages/Report";
 import Donation from "./pages/Donation";
 import "./Style.css";
@@ -24,6 +25,7 @@ const App = () => {
           <main className="flex-grow-1 p-3 overflow-auto">
             <Routes>
               <Route path="/" element={<ProductCrud />} />
+              <Route path="/home" element={<Home />} />
               <Route path="/categories" element={<CategoryCrud />} />
               
               <Route path="/borrow-books" element={<BorrowBook />} />
