@@ -1,0 +1,33 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Redirect all HTTP traffic to HTTPS (optional, if you want secure URLs)
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Set the base directory for React app (if you have a base path)
+# RewriteBase /your-app-directory/
+
+# Handle client-side routing for React (all routes redirect to index.html)
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /index.html [L]
+
+# Enable caching for static assets (optional but recommended for performance)
+<FilesMatch "\.(ico|jpg|jpeg|png|gif|svg|js|css|woff|woff2|eot|ttf|otf|mp4|webm)$">
+  ExpiresActive On
+  ExpiresDefault "access plus 1 year"
+  Header set Cache-Control "public"
+</FilesMatch>
+
+# Prevent access to sensitive files
+<FilesMatch "(^\.|\.json|\.env)">
+  Order Allow,Deny
+  Deny from all
+</FilesMatch>
+
+# Optional: Force gzip compression for certain file types
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css application/javascript application/json application/xml application/xhtml+xml
+</IfModule>
