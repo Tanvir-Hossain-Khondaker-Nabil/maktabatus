@@ -339,7 +339,7 @@ const MemberCrud = () => {
                   >
                     <option value="">Select Month</option>
                     {monthNames.map((month, index) => (
-                      <option key={index} value={index + 1}>{month}</option>
+                      <option key={index} value={month}>{month}</option>
                     ))}
                   </select>
                 </div>
