@@ -29,10 +29,10 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="d-flex bg-custom-soft align-items-center justify-content-between px-4 py-3 shadow-sm">
+    <header className="d-flex align-items-center justify-content-between px-4 py-2">
       {/* Logo / Title */}
-      <h1 className="h5 fw-bold" style={{ color: "#007604", fontSize: "25px" }}>
-        Maktabatus Salam
+      <h1 className="h5 logo" >
+          Maktabatus Salam
       </h1>
 
       {/* Profile Dropdown */}
@@ -44,10 +44,14 @@ const Header = () => {
           aria-expanded="false"
           style={{ color: "#09960e" }}
         >
-          <i className="fa-solid fa-user-circle fs-5 me-2"></i> Profile
+          <div className="text-white gap-1 d-flex align-items-center">
+            <img width="50" height="50" src="https://img.icons8.com/fluency/50/user-male-circle--v1.png" alt="user-male-circle--v1"/> 
+            <p className="user-title d-none d-md-block">Tanvir Hossain Khondaker</p>
+            {/*<i className="fa-solid fa-chevron-down"></i>*/}
+          </div>
         </button>
         <ul
-          className="dropdown-menu dropdown-menu-end"
+          className="dropdown-menu dropdown-menu-end w-100"
           aria-labelledby="profileDropdown"
         >
           <li>

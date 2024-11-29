@@ -1,0 +1,211 @@
+import React, { useState, useEffect } from 'react';
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore';
+import { db } from '../firebase';
+
+const Donation = () => {
+  const [donationData, setDonationData] = useState({
+    name: '',
+    mobile: '',
+    amount: '',
+    month: '',
+    year: new Date().getFullYear(),
+  });
+
+  const [error, setError] = useState('');
+  const [donations, setDonations] = useState([]); // State to store the list of donations
+
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December'
+  ];
+
+  // Fetch donations from Firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'donations'), (snapshot) => {
+      const donationsList = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setDonations(donationsList);
+    });
+    return unsubscribe;
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDonationData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validation checks for required fields
+    if (!donationData.amount || !donationData.month) {
+      setError('Amount and Month are required!');
+      return;
+    }
+
+    // Reset error if validation passes
+    setError('');
+
+    try {
+      // Insert the new donation into Firebase
+      await addDoc(collection(db, 'donations'), donationData);
+
+      // After successful insert, log the data (optional)
+      console.log('Donation Data Submitted:', donationData);
+
+      // Reset form after submission
+      setDonationData({
+        name: '',
+        mobile: '',
+        amount: '',
+        month: '',
+        year: new Date().getFullYear(),
+      });
+
+      // Show success message
+      alert('Donation Submitted!');
+    } catch (error) {
+      console.error('Error adding document: ', error);
+      alert('Error submitting donation!');
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, 'donations', id));
+      alert('Donation deleted!');
+    } catch (error) {
+      console.error('Error deleting document: ', error);
+      alert('Error deleting donation!');
+    }
+  };
+
+  return (
+    <div className="card">
+      <div className="card-body">
+        <h2 className="title">Member Management</h2>
+        
+        <form onSubmit={handleSubmit}>
+          <div className="form">
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  className="input-field"
+                  value={donationData.name}
+                  onChange={handleChange}
+                  placeholder="Enter your name (optional)"
+                />
+              </div>
+
+              <div class="col-md-4 mb-3">
+                <input
+                  type="text"
+                  id="mobile"
+                  name="mobile"
+                  className="input-field"
+                  value={donationData.mobile}
+                  onChange={handleChange}
+                  placeholder="Enter your mobile number (optional)"
+                />
+              </div>
+
+              <div class="col-md-4 mb-3">
+                <input
+                  type="number"
+                  id="amount"
+                  name="amount"
+                  className="input-field"
+                  value={donationData.amount}
+                  onChange={handleChange}
+                  placeholder="Amount"
+                />
+              </div>
+
+              <div class="col-md-4 mb-3">
+                <select
+                  id="month"
+                  name="month"
+                  className="input-field"
+                  value={donationData.month}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select Month</option>
+                  {monthNames.map((month, index) => (
+                    <option key={index} value={month}>
+                      {month}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div class="col-md-4 mb-3">
+                <input
+                  type="text"
+                  id="year"
+                  name="year"
+                  className="input-field"
+                  value={donationData.year}
+                  readOnly
+                />
+              </div>
+
+              <div class="col-md-4 mb-3">
+                <button type="submit" className="btn add-btn">Submit Donation</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        {/* Donations Table */}
+        <div className="mt-5 overflow-auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Amount</th>
+                  <th>Month</th>
+                  <th>Year</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {donations.map((donation) => (
+                  <tr key={donation.id}>
+                    <td>{donation.name}</td>
+                    <td>{donation.mobile}</td>
+                    <td>{donation.amount}</td>
+                    <td>{donation.month}</td>
+                    <td>{donation.year}</td>
+                    <td>
+                      <button 
+                        className="btn btn-danger" 
+                        onClick={() => handleDelete(donation.id)}>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+  );
+};
+
+export default Donation;

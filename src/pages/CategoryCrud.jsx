@@ -8,6 +8,7 @@ import {
   doc,
 } from 'firebase/firestore';
 import { db } from '../firebase';
+import Swal from 'sweetalert2';
 
 const CategoryCrud = () => {
   const [name, setName] = useState('');
@@ -28,21 +29,53 @@ const CategoryCrud = () => {
 
   const addCategory = async () => {
     if (name) {
-      await addDoc(collection(db, 'categories'), { name });
-      setName('');
+      try {
+        await addDoc(collection(db, 'categories'), { name });
+        setName('');
+        Swal.fire('Success', 'Category added successfully!', 'success');
+      } catch (error) {
+        Swal.fire('Error', 'Failed to add category!', 'error');
+      }
+    } else {
+      Swal.fire('Warning', 'Please enter a category name!', 'warning');
     }
   };
 
   const updateCategory = async (id) => {
-    const categoryDoc = doc(db, 'categories', id);
-    await updateDoc(categoryDoc, { name });
-    setName('');
-    setEditingId(null);
+    if (name) {
+      const categoryDoc = doc(db, 'categories', id);
+      try {
+        await updateDoc(categoryDoc, { name });
+        setName('');
+        setEditingId(null);
+        Swal.fire('Success', 'Category updated successfully!', 'success');
+      } catch (error) {
+        Swal.fire('Error', 'Failed to update category!', 'error');
+      }
+    } else {
+      Swal.fire('Warning', 'Please enter a category name!', 'warning');
+    }
   };
 
   const deleteCategory = async (id) => {
-    const categoryDoc = doc(db, 'categories', id);
-    await deleteDoc(categoryDoc);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const categoryDoc = doc(db, 'categories', id);
+        try {
+          await deleteDoc(categoryDoc);
+          Swal.fire('Deleted!', 'Category has been deleted.', 'success');
+        } catch (error) {
+          Swal.fire('Error', 'Failed to delete category!', 'error');
+        }
+      }
+    });
   };
 
   return (
@@ -67,7 +100,7 @@ const CategoryCrud = () => {
             </button>
           )}
         </div>
-        <table className="mt-4">
+        <table className="mt-5">
           <thead>
             <tr>
               <th>Name</th>
@@ -81,28 +114,24 @@ const CategoryCrud = () => {
                 <td>
                   <div className="d-flex justify-content-center align-item-center gap-1">
                     <button
-                      className="btn action-btn  btn-sm mr-2"
+                      className="btn action-btn btn-sm mr-2"
                       onClick={() => {
                         setName(category.name);
                         setEditingId(category.id);
                       }}
                     >
-                      <i class="fa-solid fa-pen-to-square"></i>
+                      <i className="fa-solid fa-pen-to-square"></i>
                     </button>
                     <button
-                      className="btn action-btn  btn-sm mr-2"
-                       onClick={() => deleteCategory(category.id)}
+                      className="btn action-btn btn-sm mr-2"
+                      onClick={() => deleteCategory(category.id)}
                     >
-                      <i class="fa-solid fa-trash"></i>
+                      <i className="fa-solid fa-trash"></i>
                     </button>
                   </div>
                 </td>
               </tr>
             ))}
-            <tr>
-              <th>Name</th>
-              <th>Actions</th>
-            </tr>
           </tbody>
         </table>
       </div>

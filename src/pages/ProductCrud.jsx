@@ -176,7 +176,7 @@ const ProductCrud = () => {
     <>
       <div className="card">
         <div className="card-body">
-          <h2 className="title">Book Form:</h2>
+          <h2 className="title">Book Management</h2>
           <div className="form">
             <div class="row">
               <div class="col-md-4 mb-3">
@@ -238,11 +238,9 @@ const ProductCrud = () => {
           </div>
 
           {loading ? (
-            <p className="loading">Loading products...</p>
+            <p className="loading"></p>
           ) : (
             <div className="mt-5 overflow-auto">
-              {/* Book Table */}
-              <h2 className="title">Book Table:</h2>
               <table>
                 <tr>
                   <th>Name</th>
@@ -293,13 +291,6 @@ const ProductCrud = () => {
                     </td>
                   </tr>
                 ))}
-                <tr>
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Actions</th>
-                </tr>
               </table>
             </div>
           )}

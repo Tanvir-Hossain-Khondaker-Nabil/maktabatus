@@ -2,6 +2,11 @@
 
 /* General styling */
 
+p{
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: "Montserrat", sans-serif;
   background-color: #dedede; /* Lighter background for better contrast */
@@ -22,14 +27,43 @@ h3 {
 /* Styling for form and buttons */
 
 .title {
-  color: #4caf50;
-  font-size: 20px;
-  font-weight: 500;
+  color: #13938d;
+  font-size: 25px;
+  font-weight: 400;
   margin: 0px 0 20px 0;
 }
 
+.nav-item a i{
+    color: #38a39e;
+    font-size: 22px;
+}
+
+.nav-item a{
+    font-size: 20px;
+}
+
+.user-title{
+  font-size: 17px;
+}
+
+.logo{
+    color: rgb(255 255 255);
+    font-size: 25px;
+    text-wrap-mode: wrap;
+/*    width: 20%;*/
+    padding: 0;
+    margin: 0;
+    line-height: 35px;
+    text-align: justify;
+    text-transform: uppercase;
+    font-weight: 400 !important;
+}
+
 header{
-  background-color: #cfe8cf;
+  background-color: #13938d !important;
+  position: fixed;
+  width: 100%;
+  z-index: 9;
 }
 
 aside{
@@ -43,7 +77,7 @@ aside{
 }
 
 .bg-custom-hard{
-    background: #4caf50 !important;
+    background: #38a39e !important;
 
 }
 
@@ -60,7 +94,7 @@ aside{
   flex: 1;
   padding: 12px;
   font-size: 1rem;
-  border: 1px solid #4caf50;
+  border: 1px solid #13938d;
   outline: none;
   transition: border-color 0.3s ease;
   height: 50px;
@@ -68,12 +102,17 @@ aside{
   padding: 0 20px;
   color: rgb(116, 111, 111);
   width: 100% !important;
-  background-color: #fefffe !important;
+  background-color: #f8f9fa !important;
 }
 
 select {
   color: rgb(116, 111, 111);
   appearance: none;
+}
+
+textarea{
+  height: 190px !important;
+  padding-top: 10px !important;
 }
 
 .input-field:focus {
@@ -97,8 +136,7 @@ select {
 }
 
 .action-btn {
-  background-color: #4caf50;
-
+  background-color: #38a39e;
   color: white;
   height: 33px;
   width: 33px;
@@ -113,12 +151,12 @@ select {
 }
 
 .action-btn:hover {
-  background-color: #218838;
+  background-color: #13938d;
   color: white;
 }
 
 .add-btn {
-  background-color: #4caf50;
+  background-color: #38a39e;
   color: white;
   height: 45px;
   font-weight: 500;
@@ -126,7 +164,7 @@ select {
 }
 
 .add-btn:hover {
-  background-color: #218838;
+  background-color: #13938d;
   color: white;
 }
 
@@ -172,8 +210,9 @@ select {
   border-radius: 20px;
   border: 1px solid #ddd;
   padding: 10px 0;
-  min-height: 400px;
+  min-height: 550px;
 }
+
 /* Table Styles */
 table {
   width: 100%;
@@ -181,57 +220,81 @@ table {
 }
 
 table th, table td {
-    /* height: 50px; */
-    text-align: center;
-    font-weight: 500;
-    font-size: 17px;
-    text-align: center;
-    min-width: 100px;
-    vertical-align: middle;
-    margin-top: 3px;
-    padding: 15px 10px;
+  /* height: 50px; */
+  text-align: center;
+  font-weight: 500;
+  font-size: 17px;
+  text-align: center;
+  min-width: 100px;
+  vertical-align: middle;
+  margin-top: 3px;
 }
 
-table th:first-child,
+/*table th:first-child {
+    border-radius: 90px 0 0 90px;
+}
+
 table td:first-child {
-  border-radius: 60px 0 0 60px;
+  border-radius: 40px 0 0 40px;
   
 }
 
 .no-data{
-  border-radius: 60px !important;
+  border-radius: 40px !important;
+}
+
+table th:last-child{
+  border-radius: 0px 90px 90px 0px;
+}
+
+table td:last-child {
+  border-radius: 0px 40px 40px 0px;
+}
+*/
+
+table th:first-child,
+table td:first-child {
+  border-radius: 0px 0 0 0px;
+  
+}
+.no-data{
+  border-radius: 0px !important;
 }
 
 table th:last-child,
 table td:last-child {
-  border-radius: 0px 60px 60px 0px;
+  border-radius: 0px 0px 0px 0px;
 }
 
 table td {
-  background-color: #cfe8cf !important;
+  background-color: #cfe8e7 !important;
   color: #433e3e !important;
-    font-weight: 400;
+  font-weight: 400;
+  padding: 18px 10px;
 }
 
 table th {
-  background-color: #4caf50 !important;
+  background-color: #13938dd6 !important;
   color: #ffffff;
+  margin-top: 10px !important;
+  padding: 13px 10px;
 }
 
-table th {
-  margin-top: 10px !important;
-}
 tr{
-  outline: 3px solid #F5F5F5;
+  outline: 2px solid #F5F5F5;
 }
 
 /* Modal Styling */
+.model{
+  background: #0000004a;
+}
+
 .modal-dialog {
   max-width: 500px;
 }
 
 .modal-header {
-  background-color: #4caf50;
+  background-color: #38a39e;
   color: white;
   font-size: 1.2rem;
   display: flex;
@@ -364,4 +427,5 @@ tr{
 
 ::placeholder {
   color: rgb(116, 111, 111);
+  font-weight: 300;
 }

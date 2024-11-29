@@ -18,7 +18,12 @@ const Sidebar = () => {
                 isActive("/") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
               }`}
             >
-              <i className="fa-solid fa-house me-2"></i> Home
+              <i
+                className={`fa-solid fa-house me-2 ${
+                  isActive("/") ? "text-white" : ""
+                }`}
+              ></i>
+              Home
             </Link>
           </li>
           <li className="nav-item mb-3">
@@ -28,7 +33,12 @@ const Sidebar = () => {
                 isActive("/borrow-books") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
               }`}
             >
-              <i className="fa-solid fa-book me-2"></i> Borrow Books
+              <i
+                className={`fa-solid fa-book me-2 ${
+                  isActive("/borrow-books") ? "text-white" : ""
+                }`}
+              ></i>
+              Borrow Books
             </Link>
           </li>
           <li className="nav-item mb-3">
@@ -38,7 +48,12 @@ const Sidebar = () => {
                 isActive("/categories") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
               }`}
             >
-              <i className="fa-solid fa-tags me-2"></i> Categories
+              <i
+                className={`fa-solid fa-tags me-2 ${
+                  isActive("/categories") ? "text-white" : ""
+                }`}
+              ></i>
+              Categories
             </Link>
           </li>
           <li className="nav-item mb-3">
@@ -48,7 +63,12 @@ const Sidebar = () => {
                 isActive("/members") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
               }`}
             >
-              <i className="fa-solid fa-users me-2"></i> Members
+              <i
+                className={`fa-solid fa-users me-2 ${
+                  isActive("/members") ? "text-white" : ""
+                }`}
+              ></i>
+              Members
             </Link>
           </li>
           <li className="nav-item mb-3">
@@ -58,9 +78,60 @@ const Sidebar = () => {
                 isActive("/fees") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
               }`}
             >
-              <i class="fa-solid fa-piggy-bank me-2"></i>Fees
+              <i
+                className={`fa-solid fa-piggy-bank me-2 ${
+                  isActive("/fees") ? "text-white" : ""
+                }`}
+              ></i>
+              Fees
             </Link>
           </li>
+          <li className="nav-item mb-3">
+            <Link
+              to="/costs"
+              className={`d-flex align-items-center px-3 py-2 ${
+                isActive("/costs") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
+              }`}
+            >
+              <i
+                className={`fa-solid fa-comments-dollar me-2 ${
+                  isActive("/costs") ? "text-white" : ""
+                }`}
+              ></i>
+              Cost
+            </Link>
+          </li>
+          <li className="nav-item mb-3">
+            <Link
+              to="/donation"
+              className={`d-flex align-items-center px-3 py-2 ${
+                isActive("/donation") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
+              }`}
+            >
+              <i
+                className={`fa-solid fa-hand-holding-dollar me-2 ${
+                  isActive("/donation") ? "text-white" : ""
+                }`}
+              ></i>
+              Donation
+            </Link>
+          </li>
+          <li className="nav-item mb-3">
+            <Link
+              to="/report"
+              className={`d-flex align-items-center px-3 py-2 ${
+                isActive("/report") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
+              }`}
+            >
+              <i
+                className={`fa-solid fa-file-lines me-2 ${
+                  isActive("/report") ? "text-white" : ""
+                }`}
+              ></i>
+              Report
+            </Link>
+          </li>
+          
         </ul>
       </nav>
 
@@ -68,7 +139,7 @@ const Sidebar = () => {
       {/* Additional Styling */}
       <style jsx>{`
         aside {
-          width: 300px;
+          width: 260px;;
         }
         .nav-link:hover {
           color: #09960e !important;

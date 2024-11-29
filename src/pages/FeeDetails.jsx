@@ -1,5 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { db } from '../firebase';
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 
 const FeeDetails = () => {
   const location = useLocation();
@@ -21,8 +23,33 @@ const FeeDetails = () => {
     'December',
   ];
 
+  const handleDeleteFee = async (memberId) => {
+    try {
+      const feesQuery = query(
+        collection(db, 'fees'),
+        where('memberId', '==', memberId),
+        where('month', '==', month),
+        where('year', '==', parseInt(year))
+      );
+
+      const querySnapshot = await getDocs(feesQuery);
+
+      if (!querySnapshot.empty) {
+        const feeDoc = querySnapshot.docs[0]; // Assuming one fee per member for a specific month and year
+        await deleteDoc(doc(db, 'fees', feeDoc.id));
+        alert('Fee record deleted successfully.');
+        navigate(-1); // Navigate back to the previous page
+      } else {
+        alert('No fee record found for this member.');
+      }
+    } catch (error) {
+      console.error('Error deleting fee record:', error);
+      alert('Failed to delete fee record. Please try again.');
+    }
+  };
+
   return (
-     <div className="card">
+    <div className="card">
       <div className="card-body">
         <h1>
           {monthNames[parseInt(month) - 1]} {year} :
@@ -31,23 +58,31 @@ const FeeDetails = () => {
           <div className="col-md-12">
             <h5>Members Who Paid:</h5>
             <table>
+              <thead>
                 <tr>
                   <th>Name</th>
                   <th>Mobile</th>
                   <th>Email</th>
+                  <th>Actions</th>
                 </tr>
+              </thead>
+              <tbody>
                 {paidMembers.map((member) => (
                   <tr key={member.id}>
                     <td>{member.name}</td>
                     <td>{member.phone}</td>
                     <td>{member.email}</td>
+                    <td>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDeleteFee(member.id)}
+                      >
+                        Delete Fee
+                      </button>
+                    </td>
                   </tr>
                 ))}
-                <tr>
-                  <th>Name</th>
-                  <th>Mobile</th>
-                  <th>Email</th>
-                </tr>
+              </tbody>
             </table>
           </div>
           <div className="col-md-12 mt-5">
@@ -68,16 +103,11 @@ const FeeDetails = () => {
                     <td>{member.email}</td>
                   </tr>
                 ))}
-                <tr>
-                  <th>Name</th>
-                  <th>Mobile</th>
-                  <th>Email</th>
-                </tr>
               </tbody>
             </table>
           </div>
-        </div>        
-    </div>
+        </div>
+      </div>
     </div>
   );
 };

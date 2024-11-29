@@ -65,7 +65,7 @@ const BorrowBook = () => {
   return (
     <div className="card">
       <div className="card-body">
-        <h2 className="title">Borrow Table:</h2>
+        <h2 className="title">Borrow Book Management</h2>
         <div className="mt-5 overflow-auto">
           <table>
               <tr>
@@ -105,13 +105,7 @@ const BorrowBook = () => {
                   </td>
                 </tr>
               )} 
-              <tr>
-                <th>Book</th>
-                <th>Member</th>
-                <th>Borrow Date</th>
-                <th>Actions</th>
-              </tr>
-                    </table>
+            </table>
         </div>
       </div>
     </div>
