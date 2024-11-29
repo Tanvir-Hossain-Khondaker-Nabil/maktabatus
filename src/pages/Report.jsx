@@ -20,8 +20,7 @@ const Report = () => {
     'September', 'October', 'November', 'December'
   ];
 
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 6 }, (_, index) => currentYear - index);
+  const years = ['2021', '2022', '2023', '2024'];
 
   useEffect(() => {
     if (selectedMonth && selectedYear) {
@@ -187,7 +186,7 @@ const Report = () => {
           </div>
           <div className="col-md-4 d-flex align-items-end">
             <button className="btn add-btn mb-4" onClick={generatePDF}>
-              PDF
+              Download PDF
             </button>
           </div>
         </div>
