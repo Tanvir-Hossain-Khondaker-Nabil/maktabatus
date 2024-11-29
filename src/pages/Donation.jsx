@@ -94,12 +94,11 @@ const Donation = () => {
   return (
     <div className="card">
       <div className="card-body">
-        <h2 className="title">Member Management</h2>
-        
-        <form onSubmit={handleSubmit}>
-          <div className="form">
-            <div class="row">
-              <div class="col-md-4 mb-3">
+        <h2 className="title">Member Management</h2>        
+        <form className="form" onSubmit={handleSubmit}>
+          <div className="container"> {/* Added container wrapper */}
+            <div className="row">
+              <div className="col-md-4 mb-3">
                 <input
                   type="text"
                   id="name"
@@ -111,7 +110,7 @@ const Donation = () => {
                 />
               </div>
 
-              <div class="col-md-4 mb-3">
+              <div className="col-md-4 mb-3">
                 <input
                   type="text"
                   id="mobile"
@@ -123,7 +122,7 @@ const Donation = () => {
                 />
               </div>
 
-              <div class="col-md-4 mb-3">
+              <div className="col-md-4 mb-3">
                 <input
                   type="number"
                   id="amount"
@@ -135,7 +134,7 @@ const Donation = () => {
                 />
               </div>
 
-              <div class="col-md-4 mb-3">
+              <div className="col-md-4 mb-3">
                 <select
                   id="month"
                   name="month"
@@ -153,7 +152,7 @@ const Donation = () => {
                 </select>
               </div>
 
-              <div class="col-md-4 mb-3">
+              <div className="col-md-4 mb-3">
                 <input
                   type="text"
                   id="year"
@@ -164,12 +163,16 @@ const Donation = () => {
                 />
               </div>
 
-              <div class="col-md-4 mb-3">
-                <button type="submit" className="btn add-btn">Submit Donation</button>
+              <div className="col-md-4 mb-3">
+                <button type="submit" className="btn add-btn">
+                  Submit
+                </button>
               </div>
             </div>
           </div>
         </form>
+
+
         {/* Donations Table */}
         <div className="mt-5 overflow-auto">
             <table>
@@ -203,7 +206,7 @@ const Donation = () => {
               </tbody>
             </table>
         </div>
-    </div>
+      </div>
     </div>
   );
 };

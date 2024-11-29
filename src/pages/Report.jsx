@@ -20,7 +20,8 @@ const Report = () => {
     'September', 'October', 'November', 'December'
   ];
 
-  const years = ['2021', '2022', '2023', '2024'];
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 6 }, (_, index) => currentYear - index);
 
   useEffect(() => {
     if (selectedMonth && selectedYear) {
