@@ -98,8 +98,9 @@ const Fees = () => {
             return (
               <tr key={monthYearKey}>
                 <td>
-                  {monthNames[parseInt(month) - 1]} {year}
+                  {month} {year}
                 </td>
+
                 <td>{totalAmount}</td>
                 <td>
                   <button
