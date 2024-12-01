@@ -13,14 +13,14 @@ const Sidebar = () => {
         <ul className="nav flex-column px-3">
           <li className="nav-item mb-3">
             <Link
-              to="/dashboard"
+              to="/"
               className={`d-flex align-items-center px-3 py-2 ${
-                isActive("/dashboard") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
+                isActive("/") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
               }`}
             >
               <i
                 className={`fa-solid fa-house me-2 ${
-                  isActive("/dashboard") ? "text-white" : ""
+                  isActive("/") ? "text-white" : ""
                 }`}
               ></i>
               Home
