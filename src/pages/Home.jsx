@@ -1,194 +1,161 @@
-import React, { useState, useEffect } from "react";
-import { db, storage } from "../firebase";
+import React, { useState, useEffect } from 'react';
 import {
   collection,
-  addDoc,
   getDocs,
-  updateDoc,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+} from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Home = () => {
-  const [items, setItems] = useState([]);
-  const [title, setTitle] = useState("");
-  const [image, setImage] = useState(null);
-  const [editingId, setEditingId] = useState(null);
-
-  const itemsCollection = collection(db, "items");
-
-  // Fetch Items
-  const fetchItems = async () => {
-    try {
-      const data = await getDocs(itemsCollection);
-      setItems(data.docs.map((doc, index) => ({
-        ...doc.data(),
-        id: doc.id,
-        index: index + 1,
-      })));
-    } catch (error) {
-      console.error("Error fetching items:", error);
-      alert("Error fetching items. Check console for details.");
-    }
-  };
+  const [membersCount, setMembersCount] = useState(0);
+  const [productsCount, setProductsCount] = useState(0);
+  const [borrowedProductsCount, setBorrowedProductsCount] = useState(0);
+  const [totalFees, setTotalFees] = useState(0);
+  const [totalFunctionalFees, setTotalFunctionalFees] = useState(0);
+  const [totalCosts, setTotalCosts] = useState(0);
 
   useEffect(() => {
-    fetchItems();
-  }, []); // Fetch items when the component mounts
+    // Fetch members count
+    const fetchMembersCount = async () => {
+      const snapshot = await getDocs(collection(db, 'members'));
+      setMembersCount(snapshot.size);
+    };
 
-  // Add Item
-  const addItem = async () => {
-    if (!title || !image) return alert("Title and Image are required!");
+    // Fetch products count
+    const fetchProductsCount = async () => {
+      const snapshot = await getDocs(collection(db, 'products'));
+      const totalQuantity = snapshot.docs.reduce((acc, doc) => {
+        const data = doc.data();
+        return Number(acc) + Number((data.quantity || 0)); // Add the quantity if it exists, default to 0
+      }, 0);
+      setProductsCount(totalQuantity);
+    };
+    
 
-    // Validate file type (only allow images)
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    if (!allowedTypes.includes(image.type)) {
-      alert('Please upload a valid image file (JPEG, PNG, GIF).');
-      return;
-    }
+    // Fetch borrowed products count
+    const fetchBorrowedProductsCount = async () => {
+      const snapshot = await getDocs(collection(db, 'borrowedProducts'));
+      setBorrowedProductsCount(snapshot.size);
+    };
 
-    try {
-      // Upload image to Firebase Storage
-      const imageRef = ref(storage, `images/${image.name}`);
-      const snapshot = await uploadBytes(imageRef, image);
+    // Fetch total fees sum
+    const fetchTotalFees = async () => {
+      const snapshot = await getDocs(collection(db, 'fees'));
+      const total = snapshot.docs.reduce((acc, doc) => Number(acc) + Number(doc.data().amount), 0);
+      setTotalFees(total);
+    };
 
-      // Get the download URL of the uploaded image
-      const imageUrl = await getDownloadURL(snapshot.ref);
-      console.log("Image URL:", imageUrl);
+    const fetchTotalFunctionalFees = async () => {
+      const snapshot = await getDocs(collection(db, 'functional_fees'));
+      const total = snapshot.docs.reduce((acc, doc) => Number(acc) + Number(doc.data().amount), 0);
+      setTotalFunctionalFees(total);
+    };
 
-      // Add item to Firestore
-      await addDoc(itemsCollection, { title, imageUrl });
-      console.log("Item added successfully");
+    // Fetch total costs sum
+    const fetchTotalCosts = async () => {
+      const snapshot = await getDocs(collection(db, 'costs'));
+      const total = snapshot.docs.reduce((acc, doc) => Number(acc) + Number(doc.data().amount), 0);
+      setTotalCosts(total);
+    };
 
-      // Refresh items list
-      fetchItems();
-
-      // Clear input fields
-      setTitle("");
-      setImage(null);
-    } catch (error) {
-      console.error("Error adding item:", error);
-      alert(`Error adding item. Check console for details: ${error.message}`);
-    }
-  };
-
-
-  // Update Item
-  const updateItem = async () => {
-    if (!title) return alert("Title is required for update!");
-
-    try {
-      const itemDoc = doc(db, "items", editingId);
-      await updateDoc(itemDoc, { title });
-
-      // Refresh the list of items
-      fetchItems();
-      
-      // Reset editing state
-      setEditingId(null);
-      setTitle("");
-    } catch (error) {
-      console.error("Error updating item:", error);
-      alert("Error updating item. Check console for details.");
-    }
-  };
-
-  // Delete Item
-  const deleteItem = async (id) => {
-    try {
-      const itemDoc = doc(db, "items", id);
-      await deleteDoc(itemDoc);
-
-      // Refresh the list of items
-      fetchItems();
-    } catch (error) {
-      console.error("Error deleting item:", error);
-      alert("Error deleting item. Check console for details.");
-    }
-  };
+    fetchMembersCount();
+    fetchProductsCount();
+    fetchBorrowedProductsCount();
+    fetchTotalFees();
+    fetchTotalCosts();
+    fetchTotalFunctionalFees()
+  }, []);
 
   return (
-    <div className="container mt-5">
-      <h2>Firebase CRUD with Image</h2>
-
-      {/* Form Section */}
-      <div className="mb-3">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Enter Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          type="file"
-          className="form-control mt-2"
-          onChange={(e) => setImage(e.target.files[0])}
-        />
-
-        {editingId ? (
-          <button className="btn btn-primary mt-2" onClick={updateItem}>
-            Update Item
-          </button>
-        ) : (
-          <button className="btn btn-success mt-2" onClick={addItem}>
-            Add Item
-          </button>
-        )}
+    <div className="card">
+      <div className="card-body">
+        <h2 className="title">Dashboard</h2>
+        <div className="row mt-5">
+          <div className="col-md-4">
+            <div className="custom-card primary-bg mb-4">
+              <div className="custom-card-header text-center">
+                <h6>Total Members</h6>
+              </div>
+              <div className="custom-card-body text-center">
+                <h4 className="fw-bold">{membersCount} persons</h4>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="custom-card mb-4">
+              <div className="custom-card-header text-center">
+                <h6>Total Books</h6>
+              </div>
+              <div className="custom-card-body text-center">
+                <h4 className="fw-bold">{productsCount} items</h4>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="custom-card warning-bg mb-4">
+              <div className="custom-card-header text-center">
+                <h6>Total Borrowed Books</h6>
+              </div>
+              <div className="custom-card-body text-center">
+                <h4 className="fw-bold">{borrowedProductsCount} items</h4>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="custom-card info-bg mb-4">
+              <div className="custom-card-header text-center">
+                <h6>Total Fees</h6>
+              </div>
+              <div className="custom-card-body text-center">
+                <h4 className="fw-bold">{totalFees} tk</h4>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="custom-card danger-bg mb-4">
+              <div className="custom-card-header text-center">
+                <h6>Total Functional Fees</h6>
+              </div>
+              <div className="custom-card-body text-center">
+                <h4 className="fw-bold">{totalFunctionalFees} tk</h4>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="custom-card danger-bg mb-4">
+              <div className="custom-card-header text-center">
+                <h6>Total Costs</h6>
+              </div>
+              <div className="custom-card-body text-center">
+                <h4 className="fw-bold">{totalCosts} tk</h4>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      <style>
+        {`
+        .custom-card {
+          border-radius: 10px;
+          overflow: hidden;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-      {/* Items Table */}
-      <table className="table table-bordered mt-4">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Title</th>
-            <th>Image</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.length > 0 ? (
-            items.map((item) => (
-              <tr key={item.id}>
-                <td>{item.index}</td>
-                <td>{item.title}</td>
-                <td>
-                  <img
-                    src={item.imageUrl}
-                    alt={item.title}
-                    style={{ height: "50px", objectFit: "cover" }}
-                  />
-                </td>
-                <td>
-                  <button
-                    className="btn btn-warning btn-sm me-2"
-                    onClick={() => {
-                      setEditingId(item.id);
-                      setTitle(item.title);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => deleteItem(item.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" className="text-center">
-                No items found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+        .custom-card-header {
+          background-color: #13938d;
+          padding: 15px;
+          font-size: 16px;
+          font-weight: bold;
+          color: white;
+        }
+
+        .custom-card-body {
+          padding: 20px;
+          font-size: 18px;
+          background: #13938d36;
+          height:100px;
+        }
+        `}
+      </style>
     </div>
   );
 };

@@ -13,17 +13,31 @@ const Sidebar = () => {
         <ul className="nav flex-column px-3">
           <li className="nav-item mb-3">
             <Link
-              to="/"
+              to="/dashboard"
               className={`d-flex align-items-center px-3 py-2 ${
-                isActive("/") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
+                isActive("/dashboard") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
               }`}
             >
               <i
                 className={`fa-solid fa-house me-2 ${
-                  isActive("/") ? "text-white" : ""
+                  isActive("/dashboard") ? "text-white" : ""
                 }`}
               ></i>
               Home
+            </Link>
+          </li>
+          <li className="nav-item mb-3">
+            <Link
+              to="/book-lists"
+              className={`d-flex align-items-center px-3 py-2 ${
+                isActive("/book-lists") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
+              }`}
+            >
+              <i
+                className={`fa-solid fa-book-bookmark ${
+                  isActive("/book-lists") ? "text-white" : ""
+                }`}
+              ></i> &nbsp; Book List
             </Link>
           </li>
           <li className="nav-item mb-3">
@@ -84,6 +98,21 @@ const Sidebar = () => {
                 }`}
               ></i>
               Fees
+            </Link>
+          </li>
+          <li className="nav-item mb-3">
+            <Link
+              to="/functional-fees"
+              className={`d-flex align-items-center px-3 py-2 ${
+                isActive("/functional-fees") ? "text-white bg-custom-hard shadow-sm" : "text-secondary"
+              }`}
+            >
+              <i
+                className={`fa-solid fa-piggy-bank me-2 ${
+                  isActive("/functional-fees") ? "text-white" : ""
+                }`}
+              ></i>
+              Functional Fees
             </Link>
           </li>
           <li className="nav-item mb-3">

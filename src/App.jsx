@@ -13,7 +13,9 @@ import Report from "./pages/Report";
 import Donation from "./pages/Donation";
 import "./Style.css";
 import Fees from "./pages/Fees";
+import FunctionalFees from "./pages/FunctionalFees";
 import FeeDetails from "./pages/FeeDetails";
+import FunctionalFeeDetails from "./pages/FunctionalFeeDetails";
 
 const App = () => {
   return (
@@ -24,14 +26,17 @@ const App = () => {
           <Sidebar />
           <main className="flex-grow-1 p-3 overflow-auto">
             <Routes>
-              <Route path="/" element={<ProductCrud />} />
-              <Route path="/home" element={<Home />} />
+              <Route path="/dashboard" element={<Home />} />
+              <Route path="/book-lists" element={<ProductCrud />} />
               <Route path="/categories" element={<CategoryCrud />} />
               
               <Route path="/borrow-books" element={<BorrowBook />} />
               <Route path="/members" element={<MemberCrud />} />
               <Route path="/fee-details" element={<FeeDetails/>} />
               <Route path="/fees" element={<Fees/>} />
+
+              <Route path="/functional-fee-details" element={<FunctionalFeeDetails/>} />
+              <Route path="/functional-fees" element={<FunctionalFees/>} />
               <Route path="/costs" element={<CostCrud/>} />
               <Route path="/report" element={<Report/>} />
               <Route path="/donation" element={<Donation/>} />

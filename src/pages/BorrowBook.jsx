@@ -68,44 +68,56 @@ const BorrowBook = () => {
         <h2 className="title">Borrow Book Management</h2>
         <div className="mt-5 overflow-auto">
           <table>
+            <thead>
               <tr>
                 <th>Book</th>
                 <th>Member</th>
                 <th>Borrow Date</th>
                 <th>Actions</th>
               </tr>
+            </thead>
+            <tbody>
               {borrowedProducts.length > 0 ? (
                 borrowedProducts.map((borrowed) => (
                   <tr key={borrowed.id}>
                     <td>{borrowed.productName}</td>
                     <td>
-                      {members.find((member) => member.id === borrowed.memberId)?.name || "N/A"}
+                      {/* Find the member based on memberId */}
+                      {members.find((member) => member.id === borrowed.memberId) ? (
+                        <div>
+                          
+                          <img
+                            src={members.find((member) => member.id === borrowed.memberId)?.imageUrl}
+                            alt={members.find((member) => member.id === borrowed.memberId)?.name}
+                            style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                          />
+                        </div>
+                      ) : (
+                        "N/A"
+                      )}
                     </td>
-                    <td>
-                      {new Date(borrowed.borrowDate).toLocaleDateString()}
-                    </td>
+                    <td>{new Date(borrowed.borrowDate).toLocaleDateString()}</td>
                     <td>
                       <div className="d-flex justify-content-center align-item-center">
-                          <button
-                            className="btn action-btn"
-                            onClick={() => finishBorrowing(borrowed.productId)}
-                          >
-                            <i class="fa-solid fa-xmark"></i>
-                          </button>
+                        <button
+                          className="btn action-btn"
+                          onClick={() => finishBorrowing(borrowed.productId)}
+                        >
+                          <i className="fa-solid fa-xmark"></i>
+                        </button>
                       </div>
                     </td>
                   </tr>
-
                 ))
-
               ) : (
                 <tr>
                   <td colSpan="4" className="text-center">
                     No borrowed books found.
                   </td>
                 </tr>
-              )} 
-            </table>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

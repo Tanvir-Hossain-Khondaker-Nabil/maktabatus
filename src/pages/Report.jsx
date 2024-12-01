@@ -8,11 +8,13 @@ const Report = () => {
   const [fees, setFees] = useState([]);
   const [costs, setCosts] = useState([]);
   const [donations, setDonations] = useState([]);
+  const [functionalFees, setFunctionalFees] = useState([]);  // Added state for functional fees
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [totalFees, setTotalFees] = useState(0);
   const [totalCosts, setTotalCosts] = useState(0);
   const [totalDonations, setTotalDonations] = useState(0);
+  const [totalFunctionalFees, setTotalFunctionalFees] = useState(0); // Added total for functional fees
   const [profitLoss, setProfitLoss] = useState(0);
 
   const monthNames = [
@@ -20,7 +22,9 @@ const Report = () => {
     'September', 'October', 'November', 'December'
   ];
 
-  const years = ['2021', '2022', '2023', '2024'];
+  const currentYear = new Date().getFullYear();
+const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
+
 
   // Fetch the data whenever the selected month or year changes
   useEffect(() => {
@@ -28,6 +32,7 @@ const Report = () => {
       fetchFeesData(selectedMonth, selectedYear);
       fetchCostsData(selectedMonth, selectedYear);
       fetchDonationsData(selectedMonth, selectedYear);
+      fetchFunctionalFeesData(selectedMonth, selectedYear);  // Added functional fees fetch
     }
   }, [selectedMonth, selectedYear]);
 
@@ -104,10 +109,30 @@ const Report = () => {
     }
   };
 
+  // Fetch functional fees data from Firestore (new method)
+  const fetchFunctionalFeesData = async (month, year) => {
+    try {
+      const functionalFeesQuery = query(
+        collection(db, 'functional_fees'),  // Assuming functional fees are stored in 'functional_fees' collection
+        where('month', '==', month),
+        where('year', '==', parseInt(year))
+      );
+      const functionalFeesSnapshot = await getDocs(functionalFeesQuery);
+
+      const functionalFeesData = functionalFeesSnapshot.docs.map((doc) => doc.data());
+
+      const total = functionalFeesData.reduce((sum, fee) => sum + parseFloat(fee.amount), 0);
+      setFunctionalFees(functionalFeesData);
+      setTotalFunctionalFees(total);
+    } catch (error) {
+      console.error('Error fetching functional fees data:', error);
+    }
+  };
+
   // Calculate profit/loss after fetching data
   useEffect(() => {
-    setProfitLoss(totalFees + totalDonations - totalCosts);
-  }, [totalFees, totalCosts, totalDonations]);
+    setProfitLoss(totalFees + totalDonations + totalFunctionalFees - totalCosts);
+  }, [totalFees, totalCosts, totalDonations, totalFunctionalFees]);
 
   // Generate PDF report
   const generatePDF = () => {
@@ -142,6 +167,14 @@ const Report = () => {
       body: costs.map((cost) => [cost.name, cost.amount, cost.month, cost.year, cost.type]),
     });
 
+    // Functional Fees Table (new addition)
+    doc.text('Functional Fees', 14, doc.autoTable.previous.finalY + 10);
+    doc.autoTable({
+      startY: doc.autoTable.previous.finalY + 15,
+      head: [['Amount (tk)', 'Month', 'Year']],
+      body: functionalFees.map((fee) => [fee.amount, fee.month, fee.year]),
+    });
+
     // Profit/Loss
     doc.text(
       `Profit/Loss: ${profitLoss >= 0 ? `Profit ${profitLoss} tk` : `Loss ${Math.abs(profitLoss)} tk`}`,
@@ -152,6 +185,7 @@ const Report = () => {
     // Save the PDF
     doc.save(`Monthly_Report_${selectedMonth}_${selectedYear}.pdf`);
   };
+
 
   return (
     <div className="card">
@@ -232,6 +266,36 @@ const Report = () => {
           </table>
           <h5>Total Fees: {totalFees} tk</h5>
 
+          {/* Functional Fees Table */}
+          <h5 className="mt-5">Functional Fees</h5>
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Year</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {functionalFees.length > 0 ? (
+                functionalFees.map((fee, index) => (
+                  <tr key={index}>
+                    <td>{fee.month}</td>
+                    <td>{fee.year}</td>
+                    <td>{fee.amount} tk</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3" className="text-center">
+                    No functional fees found for the selected month/year.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          <h5>Total Functional Fees: {totalFunctionalFees} tk</h5>
+
           {/* Donations Table */}
           <h5 className="mt-5">Donations</h5>
           <table className="table table-bordered">
@@ -267,22 +331,22 @@ const Report = () => {
           <table className="table table-bordered">
             <thead>
               <tr>
-                <th>Name</th>
                 <th>Month</th>
                 <th>Year</th>
-                <th>Type</th>
+                <th>Name</th>
                 <th>Amount</th>
+                <th>Type</th>
               </tr>
             </thead>
             <tbody>
               {costs.length > 0 ? (
                 costs.map((cost, index) => (
                   <tr key={index}>
-                    <td>{cost.name}</td>
                     <td>{cost.month}</td>
                     <td>{cost.year}</td>
-                    <td>{cost.type}</td>
+                    <td>{cost.name}</td>
                     <td>{cost.amount} tk</td>
+                    <td>{cost.type}</td>
                   </tr>
                 ))
               ) : (

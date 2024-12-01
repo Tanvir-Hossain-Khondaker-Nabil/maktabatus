@@ -196,26 +196,65 @@
 }
 
 
-  .book-list h2 {
-    font-size: 36px;
-    text-shadow: 2px 2px 4px #000;
-  }
+  
+    /* Book List Section */
+    .book-list {
+      background-color: #e0f2f1; /* Soft light teal background */
+      padding: 50px 15px;
+    }
 
-  .book-list .card img {
-    height: 250px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
+    .book-list h2 {
+      font-size: 38px;
+      color: #004d40;
+      font-weight: 600;
+      margin-bottom: 40px;
+    }
 
-  .book-list .card-body h5 {
-    font-size: 18px;
-    color: #004d40;
-  }
+    .book-list .card {
+      background-color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
 
-  .book-list .card-body p {
-    font-size: 14px;
-    color: #666;
-  }
+    .book-list .card:hover {
+      transform: translateY(-10px);
+    }
+
+    .book-list .card img {
+      height: 250px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .book-list .card-body {
+      padding: 15px;
+    }
+
+    .book-list .card-body h5 {
+      font-size: 18px;
+      color: #00695c; /* Dark teal for text */
+      font-weight: 600;
+    }
+
+    .book-list .card-body p {
+      font-size: 14px;
+      color: #666666; /* Soft gray */
+    }
+
+    /* Footer Section */
+    footer {
+      background-color: #00695c; /* Dark teal */
+      color: #ffffff;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    footer p {
+      margin: 0;
+      font-size: 16px;
+    }
 
   @media (max-width: 576px) {
     .book-list h2 {
@@ -337,57 +376,27 @@
     </div>
   </section>
   <!-- Book List Section -->
-<section class="book-list py-5" style="background-color: #89b2ac;">
-  <div class="container">
-    <!-- Section Title -->
-    <h2 class="text-center text-white fw-bold mb-5">Book List</h2>
-    <!-- Book Grid -->
-    <div class="row g-4">
-      <!-- Single Book Card -->
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="card h-100 text-center border-0 shadow" style="background-color: #d9f0ee;">
-          <img src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg" class="card-img-top img-fluid" alt="Book Image">
-          <div class="card-body">
-            <h5 class="card-title fw-bold">গল্পগুলো অন্যরকম</h5>
-            <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
+<!-- Book List Section -->
+  <section class="book-list py-5">
+    <div class="container">
+      <h2 class="text-center text-dark fw-bold mb-5">Book List</h2>
+      <div class="row g-4">
+        <!-- Book Cards -->
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <div class="card h-100">
+            <img src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg" class="card-img-top img-fluid" alt="Book Image">
+            <div class="card-body">
+              <h5 class="card-title">গল্পগুলো অন্যরকম</h5>
+              <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- Repeat for other books -->
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="card h-100 text-center border-0 shadow" style="background-color: #d9f0ee;">
-          <img src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg" class="card-img-top img-fluid" alt="Book Image">
-          <div class="card-body">
-            <h5 class="card-title fw-bold">মা, মা, মা ও বাবা</h5>
-            <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
-          </div>
-        </div>
-      </div>
-      <!-- Example for dynamic content -->
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="card h-100 text-center border-0 shadow" style="background-color: #d9f0ee;">
-          <img src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg" class="card-img-top img-fluid" alt="Book Image">
-          <div class="card-body">
-            <h5 class="card-title fw-bold">প্যারাডক্সিকাল সাজিদ</h5>
-            <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="card h-100 text-center border-0 shadow" style="background-color: #d9f0ee;">
-          <img src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg" class="card-img-top img-fluid" alt="Book Image">
-          <div class="card-body">
-            <h5 class="card-title fw-bold">প্যারাডক্সিকাল সাজিদ</h5>
-            <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
-          </div>
-        </div>
+        <!-- Repeat for other books... -->
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-   <!-- Footer Section (optional) -->
-  <footer class="text-center py-3 bg-dark text-white">
+   <footer>
     <p>© 2024 All Rights Reserved. মাকতাবাতুস সালাম</p>
   </footer>
 

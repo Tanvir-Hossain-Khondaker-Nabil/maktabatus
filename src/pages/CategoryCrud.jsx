@@ -83,22 +83,30 @@ const CategoryCrud = () => {
       <div className="card-body">
         <h2 className="title">Category Management</h2>
         <div className="form">
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter category name"
-            className="input-field mb-3"
-          />
-          {editingId ? (
-            <button onClick={() => updateCategory(editingId)} className="btn btn-warning">
-              Update
-            </button>
-          ) : (
-            <button onClick={addCategory} className="btn add-btn">
-              Add
-            </button>
-          )}
+          <div className="row">
+            <div className="col-md-12">
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter category name"
+                className="input-field mb-3"
+              />
+            </div>
+            <div className="col-md-2">
+              {editingId ? (
+                <button onClick={() => updateCategory(editingId)} className="btn btn-warning">
+                  Update
+                </button>
+              ) : (
+                <button onClick={addCategory} className="btn add-btn">
+                  Add
+                </button>
+              )}
+            </div>
+          </div>
+
+
         </div>
         <table className="mt-5">
           <thead>
@@ -108,40 +116,40 @@ const CategoryCrud = () => {
             </tr>
           </thead>
           <tbody>
-          {categories.length > 0 ? (
-            categories.map((category) => (
-              <tr key={category.id}>
-                <td>{category.name}</td>
-                <td>
-                  <div className="d-flex justify-content-center align-item-center gap-1">
-                    <button
-                      className="btn action-btn btn-sm mr-2"
-                      onClick={() => {
-                        setName(category.name);
-                        setEditingId(category.id);
-                      }}
-                    >
-                      <i className="fa-solid fa-pen-to-square"></i>
-                    </button>
-                    <button
-                      className="btn action-btn btn-sm mr-2"
-                      onClick={() => deleteCategory(category.id)}
-                    >
-                      <i className="fa-solid fa-trash"></i>
-                    </button>
-                  </div>
+            {categories.length > 0 ? (
+              categories.map((category) => (
+                <tr key={category.id}>
+                  <td>{category.name}</td>
+                  <td>
+                    <div className="d-flex justify-content-center align-item-center gap-1">
+                      <button
+                        className="btn action-btn btn-sm mr-2"
+                        onClick={() => {
+                          setName(category.name);
+                          setEditingId(category.id);
+                        }}
+                      >
+                        <i className="fa-solid fa-pen-to-square"></i>
+                      </button>
+                      <button
+                        className="btn action-btn btn-sm mr-2"
+                        onClick={() => deleteCategory(category.id)}
+                      >
+                        <i className="fa-solid fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+              ))
+
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center">
+                  No borrowed books found.
                 </td>
               </tr>
-            
-            ))
-
-              ) : (
-                    <tr>
-                      <td colSpan="5" className="text-center">
-                        No borrowed books found.
-                      </td>
-                    </tr>
-                  )}
+            )}
 
           </tbody>
         </table>
