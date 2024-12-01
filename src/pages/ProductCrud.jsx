@@ -409,6 +409,9 @@ const ProductCrud = () => {
       </div>
       <style>
         {`
+        .dropify-wrapper .dropify-message {
+          top: 25%;
+        }
         .dropify-wrapper {
             min-width:100%;
             margin: 0 auto;
@@ -419,7 +422,7 @@ const ProductCrud = () => {
                 background: #f8f9fa;
         }
         .dropify-wrapper .dropify-message p {
-            font-size: 18px;
+            font-size: 16px;
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
