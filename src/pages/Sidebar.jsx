@@ -8,7 +8,7 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <aside className="d-none d-md-flex flex-column bg-light shadow-sm">
+    <aside className="d-none d-md-flex flex-column bg-light shadow-sm" style={{width:"20%"}}>
       <nav className="flex-grow-1">
         <ul className="nav flex-column px-3">
           <li className="nav-item mb-3">

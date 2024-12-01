@@ -24,7 +24,7 @@ const App = () => {
         <Header />
         <div className="d-flex flex-grow-1" style={{marginTop:"85px"}}>
           <Sidebar />
-          <main className="flex-grow-1 p-3 overflow-auto">
+          <main className="flex-grow-1 p-3 overflow-auto" style={{width:"80%"}}>
             <Routes>
               <Route path="/dashboard" element={<Home />} />
               <Route path="/book-lists" element={<ProductCrud />} />
