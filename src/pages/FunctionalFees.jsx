@@ -96,12 +96,14 @@ const Fees = () => {
 
                     <td>{totalAmount.toFixed(2)}</td> {/* Display total amount rounded to 2 decimals */}
                     <td>
+                      <div className="d-flex justify-content-center align-item-center">
                       <button
-                        className="btn view-btn"
-                        onClick={() => viewDetails(month, parseInt(year))}
-                      >
-                        View
-                      </button>
+                            className="btn action-btn btn-sm mr-2"
+                            onClick={() => viewDetails(month, parseInt(year))}
+                          >
+                            <i className="fa-solid fa-eye"></i>
+                          </button>
+                          </div>
                     </td>
                   </tr>
                 );

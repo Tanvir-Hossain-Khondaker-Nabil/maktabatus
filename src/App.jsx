@@ -11,6 +11,8 @@ import CostCrud from "./pages/CostCrud";
 import Home from "./pages/Home";
 import Report from "./pages/Report";
 import Donation from "./pages/Donation";
+import LoginForm from "./pages/LoginForm";
+import SignupForm from "./pages/SignupForm";
 import "./Style.css";
 import Fees from "./pages/Fees";
 import FunctionalFees from "./pages/FunctionalFees";
@@ -34,6 +36,9 @@ const App = () => {
               <Route path="/members" element={<MemberCrud />} />
               <Route path="/fee-details" element={<FeeDetails/>} />
               <Route path="/fees" element={<Fees/>} />
+
+              <Route path="/signup" element={<SignupForm />} />
+              <Route path="/login" element={<LoginForm />} />
 
               <Route path="/functional-fee-details" element={<FunctionalFeeDetails/>} />
               <Route path="/functional-fees" element={<FunctionalFees/>} />

@@ -390,12 +390,12 @@ const MemberCrud = () => {
                           >
                             <i className="fa-solid fa-pen-to-square"></i>
                           </button>
-                          <button
+                          {/* <button
                             className="btn action-btn btn-sm mr-2"
                             onClick={() => deleteMember(member.id)}
                           >
                             <i className="fa-solid fa-trash"></i>
-                          </button>
+                          </button> */}
                           <button
                             className="btn action-btn btn-sm mr-2"
                             onClick={() => openFeeModal(member.id)}
@@ -406,9 +406,8 @@ const MemberCrud = () => {
                             className="btn action-btn btn-sm mr-2"
                             onClick={() => openFeeModalFunctionalFees(member.id)} // Open the modal for the specific member
                           >
-                            <i className="fa-solid fa-bangladeshi-taka-sign"></i>
+                            <i className="fa-solid fa-wallet"></i>
                           </button>
-
                         </div>
                       </td>
                     </tr>
@@ -502,19 +501,28 @@ const MemberCrud = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Add Functional Fee</h5>
+                <h5 className="modal-title">Add Functional Fees</h5>
                 <button type="button" className="close" onClick={closeFeeModal}>
-                  <span>&times;</span>
+                  &times;
                 </button>
               </div>
               <div className="modal-body">
-                <div className="form-group">
-                  <label htmlFor="month">Month</label>
+              <div>
+                    <label>Member</label>
+                    <input
+                      type="text"
+                      value={members.find((m) => m.id === modalMemberId)?.name || ''}
+                      readOnly
+                      className="input-field"
+                    />
+                  </div>
+                <div>
+                  <label>Member</label>
                   <select
                     id="month"
                     value={modalMonth}
                     onChange={(e) => setModalMonth(e.target.value)}
-                    className="form-control"
+                    className="input-field"
                   >
                     <option value="">Select Month</option>
                     {monthNames.map((month, index) => (
@@ -531,7 +539,7 @@ const MemberCrud = () => {
                     id="year"
                     value={modalYear}
                     onChange={(e) => setModalYear(e.target.value)}
-                    className="form-control"
+                    className="input-field"
                   />
                 </div>
                 <div className="form-group">
@@ -541,25 +549,17 @@ const MemberCrud = () => {
                     id="amount"
                     value={modalAmount}
                     onChange={(e) => setModalAmount(Number(e.target.value))}
-                    className="form-control"
+                    className="input-field"
                   />
                 </div>
                 {errorMessage && <div className="text-danger">{errorMessage}</div>}
               </div>
               <div className="modal-footer">
                 <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={closeFeeModal}
-                >
-                  Close
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary"
+                  className="btn add-btn"
                   onClick={addFunctionalFee}
                 >
-                  Add Functional Fee
+                  Confirm Fee
                 </button>
               </div>
             </div>

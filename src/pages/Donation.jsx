@@ -196,11 +196,14 @@ const Donation = () => {
                     <td>{donation.month}</td>
                     <td>{donation.year}</td>
                     <td>
-                      <button 
-                        className="btn btn-danger" 
-                        onClick={() => handleDelete(donation.id)}>
-                        Delete
-                      </button>
+                      <div className="d-flex justify-content-center align-item-center">
+                      <button
+                            className="btn action-btn btn-sm mr-2"
+                            onClick={() => handleDelete(donation.id)}
+                          >
+                            <i className="fa-solid fa-trash"></i>
+                          </button>
+                      </div>
                     </td>
                   </tr>
                 ))

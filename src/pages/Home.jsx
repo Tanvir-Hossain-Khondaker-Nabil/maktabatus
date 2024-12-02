@@ -69,7 +69,7 @@ const Home = () => {
     <div className="card">
       <div className="card-body">
         <h2 className="title">Dashboard</h2>
-        <div className="row mt-5">
+        <div className="row mt-2">
           <div className="col-md-4">
             <div className="custom-card primary-bg mb-4">
               <div className="custom-card-header text-center">

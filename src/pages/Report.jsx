@@ -237,7 +237,8 @@ const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
           <h4>Report for {selectedMonth} {selectedYear}</h4>
 
           {/* Fees Table */}
-          <h5>Fees</h5>
+          <h5 className="mt-5">Fees</h5>
+          <div className="overflow-auto">
           <table className="table table-bordered">
             <thead>
               <tr>
@@ -264,10 +265,12 @@ const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
               )}
             </tbody>
           </table>
+          </div>
           <h5>Total Fees: {totalFees} tk</h5>
 
           {/* Functional Fees Table */}
           <h5 className="mt-5">Functional Fees</h5>
+          <div className="overflow-auto">
           <table className="table table-bordered">
             <thead>
               <tr>
@@ -294,10 +297,12 @@ const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
               )}
             </tbody>
           </table>
+          </div>
           <h5>Total Functional Fees: {totalFunctionalFees} tk</h5>
 
           {/* Donations Table */}
           <h5 className="mt-5">Donations</h5>
+          <div className="overflow-auto">
           <table className="table table-bordered">
             <thead>
               <tr>
@@ -324,10 +329,12 @@ const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
               )}
             </tbody>
           </table>
+          </div>
           <h5>Total Donations: {totalDonations} tk</h5>
 
           {/* Costs Table */}
           <h5 className="mt-5">Costs</h5>
+          <div className="overflow-auto">
           <table className="table table-bordered">
             <thead>
               <tr>
@@ -358,6 +365,7 @@ const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
               )}
             </tbody>
           </table>
+          </div>
           <h5>Total Costs: {totalCosts} tk</h5>
 
           {/* Profit/Loss */}

@@ -61,6 +61,7 @@ const FeeDetails = () => {
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th>Image</th>
                   <th>Mobile</th>
                   <th>Email</th>
                   <th>Actions</th>
@@ -71,15 +72,28 @@ const FeeDetails = () => {
                 paidMembers.map((member) => (
                   <tr key={member.id}>
                     <td>{member.name}</td>
+                    <td>
+                        {member.imageUrl ? (
+                          <img
+                            src={member.imageUrl}
+                            alt={member.name}
+                            style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <span>No Image</span>
+                        )}
+                      </td>
                     <td>{member.phone}</td>
                     <td>{member.email}</td>
                     <td>
+                    <div className="d-flex justify-content-center align-item-center">
                       <button
-                        className="btn btn-danger"
-                        onClick={() => handleDeleteFee(member.id)}
-                      >
-                        Delete Fee
-                      </button>
+                            className="btn action-btn btn-sm mr-2"
+                            onClick={() => handleDeleteFee(member.id)}
+                          >
+                            <i className="fa-solid fa-trash"></i>
+                          </button>
+                          </div>
                     </td>
                   </tr>
                 ))
@@ -100,6 +114,7 @@ const FeeDetails = () => {
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th>Image</th>
                   <th>Mobile</th>
                   <th>Email</th>
                 </tr>
@@ -109,6 +124,17 @@ const FeeDetails = () => {
                 unpaidMembers.map((member) => (
                   <tr key={member.id}>
                     <td>{member.name}</td>
+                    <td>
+                        {member.imageUrl ? (
+                          <img
+                            src={member.imageUrl}
+                            alt={member.name}
+                            style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <span>No Image</span>
+                        )}
+                      </td>
                     <td>{member.phone}</td>
                     <td>{member.email}</td>
                   </tr>
