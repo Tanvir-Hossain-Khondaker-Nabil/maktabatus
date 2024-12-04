@@ -1,35 +1,29 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
-import { auth } from "./firebase";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { auth } from "./firebase"; // import your Firebase auth instance
 
-const googleProvider = new GoogleAuthProvider();
-
+// Register user with email and password
 export const registerUser = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     return userCredential.user;
   } catch (error) {
-    throw error;
+    throw error;  // Error handling can be improved here for specific errors
   }
 };
 
+// Login user with email and password
 export const loginUser = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return userCredential.user;
   } catch (error) {
-    throw error;
+    console.error(`Error Code: ${error.code}, Message: ${error.message}`);
+    throw error;  // Passing error forward to be handled in the component
   }
 };
 
-export const googleLogin = async () => {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    return result.user;
-  } catch (error) {
-    throw error;
-  }
-};
 
+// Logout user
 export const logoutUser = async () => {
   try {
     await signOut(auth);

@@ -23,7 +23,7 @@ const Sidebar = () => {
                   isActive("/") ? "text-white" : ""
                 }`}
               ></i>
-              Home
+              Deshboard
             </Link>
           </li>
           <li className="nav-item mb-3">

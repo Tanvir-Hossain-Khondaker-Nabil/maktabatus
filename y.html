@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Design Match</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
@@ -26,7 +23,8 @@
 
     /* Header Section */
     .header {
-      background-color: #343a40; /* Dark background for better contrast */
+      background-color: #343a40;
+      /* Dark background for better contrast */
       padding: 20px 0;
       color: #ffffff;
       border-bottom: 2px solid #444;
@@ -35,20 +33,21 @@
     .header .logo {
       font-size: 28px;
       font-weight: bold;
-      color: #ffc107; /* Bright yellow for the logo */
+      color: #ffc107;
+      /* Bright yellow for the logo */
     }
 
-    
-  .header .contact-info {
-    font-size: 16px;
-    color: #ccc;
-    margin-right: 10px;
-    margin-top: 10px;
-  }
 
-  .header .contact-info span {
-    margin-right: 15px;
-  }
+    .header .contact-info {
+      font-size: 16px;
+      color: #ccc;
+      margin-right: 10px;
+      margin-top: 10px;
+    }
+
+    .header .contact-info span {
+      margin-right: 15px;
+    }
 
     .header .social-icons {
       text-align: center;
@@ -63,12 +62,14 @@
     }
 
     .header .social-icons a:hover {
-      color: #fd7e14; /* Orange hover effect */
+      color: #fd7e14;
+      /* Orange hover effect */
     }
 
     /* Navigation Bar */
     nav {
-      background-color: #ffc107; /* Blue color for navigation */
+      background-color: #ffc107;
+      /* Blue color for navigation */
       padding: 6px 0;
     }
 
@@ -99,132 +100,131 @@
       display: block;
       margin-bottom: 10px;
     }
+
     @media (max-width: 768px) {
-  /* Header Section */
-  .header {
-    padding: 20px 0;
-  }
 
-  .header .logo {
-    font-size: 28px;
-    margin-bottom: 10px;
-  }
+      /* Header Section */
+      .header {
+        padding: 20px 0;
+      }
 
-  .header .contact-info {
-    font-size: 14px;
-  }
+      .header .logo {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
 
-  .header .social-icons a {
-    font-size: 20px;
-    margin-right: 15px;
-  }
+      .header .contact-info {
+        font-size: 14px;
+      }
 
-  /* Navigation Bar */
-  nav {
-    padding: 10px 0;
-  }
+      .header .social-icons a {
+        font-size: 20px;
+        margin-right: 15px;
+      }
 
-  .nav-pills .nav-link {
-    font-size: 14px;
-    padding: 8px 16px;
-  }
+      /* Navigation Bar */
+      nav {
+        padding: 10px 0;
+      }
 
-  .nav-pills .nav-link.active {
-    background-color: #fd7e14;
-  }
+      .nav-pills .nav-link {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
 
-  /* Hero Section */
-  .hero-section {
-    height: 350px;
-  }
+      .nav-pills .nav-link.active {
+        background-color: #fd7e14;
+      }
 
-  .hero-section .content h2 {
-    font-size: 24px;
-    line-height: 1.3;
-  }
+      /* Hero Section */
+      .hero-section {
+        height: 350px;
+      }
 
-  .hero-section .content p {
-    font-size: 14px;
-    margin-top: 10px;
-  }
+      .hero-section .content h2 {
+        font-size: 24px;
+        line-height: 1.3;
+      }
 
-  .hero-section button {
-    padding: 10px 25px;
-    font-size: 16px;
-  }
+      .hero-section .content p {
+        font-size: 14px;
+        margin-top: 10px;
+      }
 
-  /* Features Section */
-  .features {
-    padding: 40px 15px;
-  }
+      .hero-section button {
+        padding: 10px 25px;
+        font-size: 16px;
+      }
 
-  .feature-card {
-    padding: 20px;
-  }
+      /* Features Section */
+      .features {
+        padding: 40px 15px;
+      }
 
-  .feature-card i {
-    font-size: 35px;
-  }
+      .feature-card {
+        padding: 20px;
+      }
 
-  .feature-card h5 {
-    font-size: 20px;
-  }
+      .feature-card i {
+        font-size: 35px;
+      }
 
-  .feature-card p {
-    font-size: 14px;
-  }
+      .feature-card h5 {
+        font-size: 20px;
+      }
 
-  /* Adjust feature card layout for smaller screens */
-  .feature-card {
-    margin-bottom: 20px;
-  }
+      .feature-card p {
+        font-size: 14px;
+      }
 
-  /* Make the columns stack on smaller screens */
-  .row .col-md-4 {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
+      /* Adjust feature card layout for smaller screens */
+      .feature-card {
+        margin-bottom: 20px;
+      }
 
-  /* Social Icons in the header stacked */
-  .header .social-icons {
-    margin-top: 15px;
-  }
+      /* Make the columns stack on smaller screens */
+      .row .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
 
-  .header .social-icons a {
-    margin-right: 10px;
-  }
-}
+      /* Social Icons in the header stacked */
+      .header .social-icons {
+        margin-top: 15px;
+      }
 
-
-  .book-list h2 {
-    font-size: 36px;
-    text-shadow: 2px 2px 4px #000;
-  }
-
-  .book-list .card img {
-    height: 250px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-
-  .book-list .card-body h5 {
-    font-size: 18px;
-    color: #004d40;
-  }
-
-  .book-list .card-body p {
-    font-size: 14px;
-    color: #666;
-  }
-
-  @media (max-width: 576px) {
-    .book-list h2 {
-      font-size: 28px;
+      .header .social-icons a {
+        margin-right: 10px;
+      }
     }
-  }
 
 
+    .book-list h2 {
+      font-size: 36px;
+      text-shadow: 2px 2px 4px #000;
+    }
 
+    .book-list .card img {
+      height: 250px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .book-list .card-body h5 {
+      font-size: 18px;
+      color: #004d40;
+    }
+
+    .book-list .card-body p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    @media (max-width: 576px) {
+      .book-list h2 {
+        font-size: 28px;
+      }
+    }
   </style>
   <!-- Header Section -->
   <header class="header">
@@ -282,11 +282,8 @@
 
   <!-- Hero Section -->
   <section class="hero-section position-relative">
-    <img
-      src="https://i0.wp.com/www.muslimmedia.info/wp-content/uploads/2020/09/44540.jpg?fit=1400%2C700&ssl=1"
-      class="img-fluid w-100"
-      alt="Bookshelf Background"
-    />
+    <img src="https://i0.wp.com/www.muslimmedia.info/wp-content/uploads/2020/09/44540.jpg?fit=1400%2C700&ssl=1"
+      class="img-fluid w-100" alt="Bookshelf Background" />
     <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
       <h2 class="fw-bold">
         "পাঠ করুন আপনার পালনকর্তার নামে যিনি সৃষ্টি করেছেন।"
@@ -337,62 +334,69 @@
     </div>
   </section>
   <!-- Book List Section -->
-<section class="book-list py-5" style="background-color: #89b2ac;">
-  <div class="container">
-    <!-- Section Title -->
-    <h2 class="text-center text-white fw-bold mb-5">Book List</h2>
-    <!-- Book Grid -->
-    <div class="row g-4">
-      <!-- Single Book Card -->
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="card h-100 text-center border-0 shadow" style="background-color: #d9f0ee;">
-          <img src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg" class="card-img-top img-fluid" alt="Book Image">
-          <div class="card-body">
-            <h5 class="card-title fw-bold">গল্পগুলো অন্যরকম</h5>
-            <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
+  <section class="book-list py-5" style="background-color: #89b2ac;">
+    <div class="container">
+      <!-- Section Title -->
+      <h2 class="text-center text-white fw-bold mb-5">Book List</h2>
+      <!-- Book Grid -->
+      <div class="row g-4">
+        <!-- Single Book Card -->
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <div class="card h-100 text-center border-0 shadow" style="background-color: #d9f0ee;">
+            <img
+              src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg"
+              class="card-img-top img-fluid" alt="Book Image">
+            <div class="card-body">
+              <h5 class="card-title fw-bold">গল্পগুলো অন্যরকম</h5>
+              <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- Repeat for other books -->
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="card h-100 text-center border-0 shadow" style="background-color: #d9f0ee;">
-          <img src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg" class="card-img-top img-fluid" alt="Book Image">
-          <div class="card-body">
-            <h5 class="card-title fw-bold">মা, মা, মা ও বাবা</h5>
-            <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
+        <!-- Repeat for other books -->
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <div class="card h-100 text-center border-0 shadow" style="background-color: #d9f0ee;">
+            <img
+              src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg"
+              class="card-img-top img-fluid" alt="Book Image">
+            <div class="card-body">
+              <h5 class="card-title fw-bold">মা, মা, মা ও বাবা</h5>
+              <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- Example for dynamic content -->
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="card h-100 text-center border-0 shadow" style="background-color: #d9f0ee;">
-          <img src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg" class="card-img-top img-fluid" alt="Book Image">
-          <div class="card-body">
-            <h5 class="card-title fw-bold">প্যারাডক্সিকাল সাজিদ</h5>
-            <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
+        <!-- Example for dynamic content -->
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <div class="card h-100 text-center border-0 shadow" style="background-color: #d9f0ee;">
+            <img
+              src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg"
+              class="card-img-top img-fluid" alt="Book Image">
+            <div class="card-body">
+              <h5 class="card-title fw-bold">প্যারাডক্সিকাল সাজিদ</h5>
+              <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="card h-100 text-center border-0 shadow" style="background-color: #d9f0ee;">
-          <img src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg" class="card-img-top img-fluid" alt="Book Image">
-          <div class="card-body">
-            <h5 class="card-title fw-bold">প্যারাডক্সিকাল সাজিদ</h5>
-            <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <div class="card h-100 text-center border-0 shadow" style="background-color: #d9f0ee;">
+            <img
+              src="https://ds.rokomari.store/rokomari110/ProductNew20190903/260X372/Obaddhotar_Itihas-Dr_Shamsul_Arafin-af2a4-225604.jpg"
+              class="card-img-top img-fluid" alt="Book Image">
+            <div class="card-body">
+              <h5 class="card-title fw-bold">প্যারাডক্সিকাল সাজিদ</h5>
+              <p class="card-text">প্রকাশনী: সঞ্চলন প্রকাশন</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-   <!-- Footer Section (optional) -->
-  <footer class="text-center py-3 bg-dark text-white">
-    <p>© 2024 All Rights Reserved. মাকতাবাতুস সালাম</p>
+  <!-- Footer Section (optional) -->
+  <footer class="text-center  bg-dark text-white">
+    <p class="p-0 m-0">© 2024 All Rights Reserved. মাকতাবাতুস সালাম</p>
   </footer>
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
