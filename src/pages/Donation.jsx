@@ -7,6 +7,7 @@ import {
   doc,
 } from 'firebase/firestore';
 import { db } from '../firebase';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const Donation = () => {
   const [donationData, setDonationData] = useState({
@@ -51,6 +52,12 @@ const Donation = () => {
     // Validation checks for required fields
     if (!donationData.amount || !donationData.month) {
       setError('Amount and Month are required!');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Amount and Month are required!',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
@@ -74,23 +81,43 @@ const Donation = () => {
       });
 
       // Show success message
-      alert('Donation Submitted!');
+      Swal.fire({
+        title: 'Success!',
+        text: 'Donation Submitted Successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
     } catch (error) {
       console.error('Error adding document: ', error);
-      alert('Error submitting donation!');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Error submitting donation!',
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+      });
     }
   };
 
   const handleDelete = async (id) => {
     try {
       await deleteDoc(doc(db, 'donations', id));
-      alert('Donation deleted!');
+      Swal.fire({
+        title: 'Deleted!',
+        text: 'Donation deleted successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
     } catch (error) {
       console.error('Error deleting document: ', error);
-      alert('Error deleting donation!');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Error deleting donation!',
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+      });
     }
   };
-
+  
   return (
     <div className="card">
       <div className="card-body">

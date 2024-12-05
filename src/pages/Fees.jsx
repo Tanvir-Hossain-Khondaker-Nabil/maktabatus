@@ -12,14 +12,17 @@ const Fees = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Real-time listener for fees collection
     const unsubscribeFees = onSnapshot(collection(db, 'fees'), (snapshot) => {
       setFees(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     });
 
+    // Real-time listener for members collection
     const unsubscribeMembers = onSnapshot(collection(db, 'members'), (snapshot) => {
       setMembers(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     });
 
+    // Cleanup listeners when the component is unmounted
     return () => {
       unsubscribeFees();
       unsubscribeMembers();
@@ -27,12 +30,20 @@ const Fees = () => {
   }, []);
 
   const groupFeesByMonthYear = () => {
-    return fees.reduce((groups, fee) => {
+    // Sort fees by year and month in descending order
+    const sortedFees = fees.sort((a, b) => {
+      // Compare year first, then month
+      if (b.year === a.year) {
+        return b.month - a.month; // If years are equal, compare months
+      }
+      return b.year - a.year; // Otherwise compare years
+    });
+
+    return sortedFees.reduce((groups, fee) => {
       const monthYearKey = `${fee.month}-${fee.year}`;
       if (!groups[monthYearKey]) {
         groups[monthYearKey] = [];
       }
-      // Ensure that the amount is treated as a number
       groups[monthYearKey].push({ ...fee, amount: parseFloat(fee.amount) });
       return groups;
     }, {});
@@ -40,9 +51,13 @@ const Fees = () => {
 
   const groupedFees = groupFeesByMonthYear();
 
+  // Get the latest month-year group (most recent fees)
+  const latestMonthYear = Object.keys(groupedFees)[0];
+  const latestFees = groupedFees[latestMonthYear] || [];
+
   const viewDetails = (month, year) => {
     const paidMemberIds = fees
-      .filter((fee) => fee.month === month && fee.year === year )
+      .filter((fee) => fee.month === month && fee.year === year)
       .map((fee) => fee.memberId);
 
     const paidMembers = members.filter((member) =>
@@ -52,6 +67,7 @@ const Fees = () => {
       (member) => !paidMemberIds.includes(member.id)
     );
 
+    // Navigate to fee details page with the data passed as state
     navigate('/fee-details', {
       state: {
         month,

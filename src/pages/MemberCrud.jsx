@@ -15,6 +15,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import "dropify/dist/css/dropify.min.css";
 import Dropify from "dropify";
 import $ from "jquery";
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const MemberCrud = () => {
   const [name, setName] = useState('');
@@ -95,7 +96,12 @@ const MemberCrud = () => {
   // Add member
   const addMember = async () => {
     if (!name || !email || !role || !phone) {
-      alert('Please fill in all fields.');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please fill in all fields.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
@@ -113,8 +119,20 @@ const MemberCrud = () => {
         imageUrl: imageDownloadUrl,
       });
       resetForm();
+      Swal.fire({
+        title: 'Success!',
+        text: 'Member added successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
     } catch (error) {
       console.error('Error adding member:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an error adding the member.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   };
 
@@ -135,8 +153,20 @@ const MemberCrud = () => {
         imageUrl: imageDownloadUrl,
       });
       resetForm();
+      Swal.fire({
+        title: 'Success!',
+        text: 'Member updated successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
     } catch (error) {
       console.error('Error updating member:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an error updating the member.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   };
 
@@ -145,8 +175,20 @@ const MemberCrud = () => {
     try {
       const memberDoc = doc(db, 'members', id);
       await deleteDoc(memberDoc);
+      Swal.fire({
+        title: 'Deleted!',
+        text: 'Member deleted successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
     } catch (error) {
       console.error('Error deleting member:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an error deleting the member.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   };
 
@@ -216,7 +258,12 @@ const MemberCrud = () => {
 
   const addFee = async () => {
     if (!modalMonth || !modalYear) {
-      alert('Please select the month and year.');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select the month and year.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
@@ -234,14 +281,31 @@ const MemberCrud = () => {
         amount: modalAmount,
       });
       closeFeeModal();
+      Swal.fire({
+        title: 'Success!',
+        text: 'Fee added successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
     } catch (error) {
       console.error('Error adding fee:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an error adding the fee.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   };
 
   const addFunctionalFee = async () => {
     if (!modalMonth || !modalYear) {
-      alert('Please select the month and year.');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select the month and year.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
@@ -259,8 +323,20 @@ const MemberCrud = () => {
         amount: modalAmount,
       });
       closeFeeModal();
+      Swal.fire({
+        title: 'Success!',
+        text: 'Functional fee added successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
     } catch (error) {
       console.error('Error adding functional fee:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an error adding the functional fee.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   };
 
@@ -275,6 +351,7 @@ const MemberCrud = () => {
     'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December',
   ];
+
 
 
   return (

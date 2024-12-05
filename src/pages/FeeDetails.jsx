@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { db } from '../firebase';
 import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 
@@ -37,16 +38,36 @@ const FeeDetails = () => {
       if (!querySnapshot.empty) {
         const feeDoc = querySnapshot.docs[0]; // Assuming one fee per member for a specific month and year
         await deleteDoc(doc(db, 'fees', feeDoc.id));
-        alert('Fee record deleted successfully.');
+
+        // Using SweetAlert2 for success message
+        Swal.fire({
+          icon: 'success',
+          title: 'Fee record deleted successfully',
+          confirmButtonText: 'Okay',
+        });
+
         navigate(-1); // Navigate back to the previous page
       } else {
-        alert('No fee record found for this member.');
+        // Using SweetAlert2 for error message
+        Swal.fire({
+          icon: 'warning',
+          title: 'No fee record found',
+          text: 'No fee record found for this member.',
+          confirmButtonText: 'Okay',
+        });
       }
     } catch (error) {
       console.error('Error deleting fee record:', error);
-      alert('Failed to delete fee record. Please try again.');
+
+      // Using SweetAlert2 for error message
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to delete fee record',
+        text: 'Please try again later.',
+        confirmButtonText: 'Okay',
+      });
     }
-  };
+  }
 
   return (
     <div className="card">

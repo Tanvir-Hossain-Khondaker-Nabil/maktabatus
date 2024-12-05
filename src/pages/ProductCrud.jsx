@@ -14,6 +14,7 @@ import "dropify/dist/css/dropify.min.css"; // Import Dropify styles
 import Dropify from "dropify";
 import $ from "jquery"; // Import jQuery
 import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
+import Swal from "sweetalert2"; // Import SweetAlert2
 
 const ProductCrud = () => {
   const [name, setName] = useState("");
@@ -116,6 +117,19 @@ const ProductCrud = () => {
         createDate: currentDate,
       });
       resetForm();
+      Swal.fire({
+        title: "Success!",
+        text: "Product added successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    } else {
+      Swal.fire({
+        title: "Error!",
+        text: "Please fill in all fields.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -132,37 +146,59 @@ const ProductCrud = () => {
       updateDate: currentDate,
     });
     resetForm();
+    Swal.fire({
+      title: "Success!",
+      text: "Product updated successfully!",
+      icon: "success",
+      confirmButtonText: "OK",
+    });
   };
 
   const deleteProduct = async (id) => {
     const productDoc = doc(db, "products", id);
     await deleteDoc(productDoc);
+    Swal.fire({
+      title: "Deleted!",
+      text: "Product deleted successfully!",
+      icon: "success",
+      confirmButtonText: "OK",
+    });
   };
 
   const borrowProduct = async (productId, memberId) => {
     if (isProcessing) return; // Prevent duplicate clicks
     setIsProcessing(true);
-  
+
     const product = products.find((product) => product.id === productId);
     const member = members.find((member) => member.id === memberId);
-  
+
     if (!product || !member) {
-      alert("Invalid product or member.");
+      Swal.fire({
+        title: "Error!",
+        text: "Invalid product or member.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
       setIsProcessing(false);
       return;
     }
-  
+
     // Check if the member has already borrowed this product
     const existingBorrow = borrowedProducts.find(
       (borrow) => borrow.productId === productId && borrow.memberId === memberId
     );
-  
+
     if (existingBorrow) {
-      alert("This member has already borrowed this product.");
+      Swal.fire({
+        title: "Error!",
+        text: "This member has already borrowed this product.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
       setIsProcessing(false);
       return;
     }
-  
+
     if (product.quantity > 0 && memberId) {
       const currentDate = new Date().toISOString();
       const borrowData = {
@@ -171,29 +207,44 @@ const ProductCrud = () => {
         borrowDate: currentDate,
         productName: product.name,
       };
-  
+
       try {
         // Decrease quantity in Firestore
         await updateDoc(doc(db, "products", productId), {
           quantity: Number(product.quantity) - 1,
         });
-  
+
         // Add borrowed product to Firestore
         await addDoc(collection(db, "borrowedProducts"), borrowData);
-  
+
         setIsModalOpen(false); // Close modal
+        Swal.fire({
+          title: "Success!",
+          text: "Product borrowed successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
       } catch (error) {
         console.error("Error borrowing product:", error);
-        alert("Failed to borrow product.");
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to borrow product.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
       } finally {
         setIsProcessing(false);
       }
     } else {
-      alert("Product is out of stock or member not selected.");
+      Swal.fire({
+        title: "Error!",
+        text: "Product is out of stock or member not selected.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
       setIsProcessing(false);
     }
   };
-  
 
   const resetForm = () => {
     setName("");
@@ -203,6 +254,7 @@ const ProductCrud = () => {
     setQuantity("");
     $(".dropify-clear").click();
   };
+
 
   return (
     <>

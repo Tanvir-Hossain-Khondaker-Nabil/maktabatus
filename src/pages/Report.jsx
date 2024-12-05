@@ -23,8 +23,7 @@ const Report = () => {
   ];
 
   const currentYear = new Date().getFullYear();
-const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
-
+  const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
 
   // Fetch the data whenever the selected month or year changes
   useEffect(() => {
@@ -39,29 +38,46 @@ const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
   // Fetch fees data from Firestore
   const fetchFeesData = async (month, year) => {
     try {
+      // Fetch fees data for the specific month and year
       const feesQuery = query(
         collection(db, 'fees'),
         where('month', '==', month),
         where('year', '==', parseInt(year))
       );
       const feesSnapshot = await getDocs(feesQuery);
-
       const feesData = feesSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
 
-      console.log("Fetched Fees Data:", feesData); // Debugging line
+      // Fetch all members to map member details later
+      const membersSnapshot = await getDocs(collection(db, 'members'));
+      const membersData = membersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-      // Ensure the amount is a valid number
-      const total = feesData.reduce((sum, fee) => sum + (parseFloat(fee.amount) || 0), 0);
+      // Combine fees data with member data based on memberId
+      const feesWithMemberDetails = feesData.map((fee) => {
+        const member = membersData.find((m) => m.id === fee.memberId); // Match memberId from fee to member's id
+        return {
+          ...fee,
+          memberName: member ? member.name : 'Unknown',
+          profileImage: member ? member.imageUrl : '',  // Add profile image URL
+          amount: parseFloat(fee.amount) || 0,  // Ensure amount is a number
+        };
+      });
 
-      setFees(feesData);
-      setTotalFees(total);
+      // Calculate total amount of fees
+      const total = feesWithMemberDetails.reduce((sum, fee) => sum + fee.amount, 0);
+
+      setFees(feesWithMemberDetails);
+      setTotalFees(total);  // Update total fees state
     } catch (error) {
       console.error('Error fetching fees data:', error);
     }
   };
+
 
   // Fetch costs data from Firestore
   const fetchCostsData = async (month, year) => {
@@ -109,82 +125,220 @@ const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
     }
   };
 
-  // Fetch functional fees data from Firestore (new method)
+  // Fetch functional fees and member data based on month and year
   const fetchFunctionalFeesData = async (month, year) => {
     try {
+      // Fetch functional fees data for the specific month and year
       const functionalFeesQuery = query(
-        collection(db, 'functional_fees'),  // Assuming functional fees are stored in 'functional_fees' collection
+        collection(db, 'functional_fees'),
         where('month', '==', month),
         where('year', '==', parseInt(year))
       );
       const functionalFeesSnapshot = await getDocs(functionalFeesQuery);
+      const functionalFeesData = functionalFeesSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-      const functionalFeesData = functionalFeesSnapshot.docs.map((doc) => doc.data());
+      // Fetch all members to map member details later
+      const membersSnapshot = await getDocs(collection(db, 'members'));
+      const membersData = membersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-      const total = functionalFeesData.reduce((sum, fee) => sum + parseFloat(fee.amount), 0);
-      setFunctionalFees(functionalFeesData);
-      setTotalFunctionalFees(total);
+      // Combine functional fees data with member data based on memberId
+      const functionalFeesWithMemberDetails = functionalFeesData.map((fee) => {
+        const member = membersData.find((m) => m.id === fee.memberId); // Match memberId from fee to member's id
+        return {
+          ...fee,
+          memberName: member ? member.name : 'Unknown',
+          profileImage: member ? member.imageUrl : '',  // Add profile image URL
+          amount: parseFloat(fee.amount) || 0,  // Ensure amount is a number
+        };
+      });
+
+      // Calculate total amount of functional fees
+      const total = functionalFeesWithMemberDetails.reduce((sum, fee) => sum + fee.amount, 0);
+
+      setFunctionalFees(functionalFeesWithMemberDetails);
+      setTotalFunctionalFees(total);  // Update total functional fees state
     } catch (error) {
       console.error('Error fetching functional fees data:', error);
     }
   };
+
 
   // Calculate profit/loss after fetching data
   useEffect(() => {
     setProfitLoss(totalFees + totalDonations + totalFunctionalFees - totalCosts);
   }, [totalFees, totalCosts, totalDonations, totalFunctionalFees]);
 
-  // Generate PDF report
-  const generatePDF = () => {
-    const doc = new jsPDF();
 
-    // Title
+
+  const generatePDF = () => {
+    const doc = new jsPDF('p', 'mm', 'a4'); // Set page size to A4 (portrait mode)
+
+    // Title Section
     doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
     doc.text(`Monthly Report for ${selectedMonth} ${selectedYear}`, 14, 20);
 
-    // Fees Table
+    // Set margins
+    const margin = { top: 25, left: 14, bottom: 15, right: 14 };
+    let yPosition = doc.lastAutoTable.finalY + 10 || 30;
+
+    // Fees Table Section
     doc.setFontSize(14);
-    doc.text('Fees', 14, 30);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Fees', margin.left, yPosition);
+
+    // Table headers and body
+    const tableHeader = [['Member Name', 'Amount (tk)', 'Month', 'Year']];
+    const tableBody = fees.map((fee) => [
+      fee.memberName,
+      fee.amount,
+      fee.month,
+      fee.year
+    ]);
+
+    // Add Fees Table
     doc.autoTable({
-      startY: 35,
-      head: [['Amount (tk)', 'Month', 'Year']],
-      body: fees.map((fee) => [fee.amount, fee.month, fee.year]),
+      startY: yPosition + 10,
+      head: tableHeader,
+      body: tableBody,
+      margin: { top: yPosition + 10, left: margin.left },
+      styles: {
+        fontSize: 10,  // Smaller font size to fit better
+        cellPadding: 2,  // Reduced padding to minimize row height
+        halign: 'center',  // Center align table content
+        fillColor: [144, 238, 144],  // Soft green background for header
+        textColor: [0, 0, 0],  // Black font color for header
+        lineColor: [0, 0, 0],  // Black border lines for table
+        lineWidth: 0.1,
+      },
+      bodyStyles: {
+        fillColor: [255, 255, 255],  // White background for table data cells
+        textColor: [0, 0, 0],  // Black font color for table data cells
+      }
     });
 
-    // Donations Table
-    doc.text('Donations', 14, doc.autoTable.previous.finalY + 10);
+    yPosition = doc.lastAutoTable.finalY + 10;
+
+    // Functional Fees Table Section
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Functional Fees', margin.left, yPosition);
+
+    const functionalFeesBody = functionalFees.map((fee) => [
+      fee.memberName,
+      fee.amount,
+      fee.month,
+      fee.year
+    ]);
+
+    // Add Functional Fees Table
     doc.autoTable({
-      startY: doc.autoTable.previous.finalY + 15,
-      head: [['Amount (tk)', 'Month', 'Year']],
-      body: donations.map((donation) => [donation.amount, donation.month, donation.year]),
+      startY: yPosition + 10,
+      head: [['Member Name', 'Amount (tk)', 'Month', 'Year']],
+      body: functionalFeesBody,
+      margin: { top: yPosition + 10, left: margin.left },
+      styles: {
+        fontSize: 10,  // Smaller font size to fit better
+        cellPadding: 2,  // Reduced padding to minimize row height
+        halign: 'center',  // Center align table content
+        fillColor: [144, 238, 144],  // Soft green background for header
+        textColor: [0, 0, 0],  // Black font color for header
+        lineColor: [0, 0, 0],  // Black border lines for table
+        lineWidth: 0.1,
+      },
+      bodyStyles: {
+        fillColor: [255, 255, 255],  // White background for table data cells
+        textColor: [0, 0, 0],  // Black font color for table data cells
+      }
     });
 
-    // Costs Table
-    doc.text('Costs', 14, doc.autoTable.previous.finalY + 10);
+    yPosition = doc.lastAutoTable.finalY + 10;
+
+    // Donations Table Section
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Donations', margin.left, yPosition);
+
+    const donationsBody = donations.map((donation) => [
+      donation.name,
+      donation.mobile,
+      donation.amount
+    ]);
+
+    // Add Donations Table
     doc.autoTable({
-      startY: doc.autoTable.previous.finalY + 15,
-      head: [['Name', 'Amount (tk)', 'Month', 'Year', 'Type']],
-      body: costs.map((cost) => [cost.name, cost.amount, cost.month, cost.year, cost.type]),
+      startY: yPosition + 10,
+      head: [['Name', 'Mobile', 'Amount (tk)']],
+      body: donationsBody,
+      margin: { top: yPosition + 10, left: margin.left },
+      styles: {
+        fontSize: 10,  // Smaller font size to fit better
+        cellPadding: 2,  // Reduced padding to minimize row height
+        halign: 'center',  // Center align table content
+        fillColor: [144, 238, 144],  // Soft green background for header
+        textColor: [0, 0, 0],  // Black font color for header
+        lineColor: [0, 0, 0],  // Black border lines for table
+        lineWidth: 0.1,
+      },
+      bodyStyles: {
+        fillColor: [255, 255, 255],  // White background for table data cells
+        textColor: [0, 0, 0],  // Black font color for table data cells
+      }
     });
 
-    // Functional Fees Table (new addition)
-    doc.text('Functional Fees', 14, doc.autoTable.previous.finalY + 10);
+    yPosition = doc.lastAutoTable.finalY + 10;
+
+    // Costs Table Section
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Costs', margin.left, yPosition);
+
+    const costsBody = costs.map((cost) => [cost.name, cost.amount, cost.type]);
+
+    // Add Costs Table
     doc.autoTable({
-      startY: doc.autoTable.previous.finalY + 15,
-      head: [['Amount (tk)', 'Month', 'Year']],
-      body: functionalFees.map((fee) => [fee.amount, fee.month, fee.year]),
+      startY: yPosition + 10,
+      head: [['Name', 'Amount (tk)', 'Type']],
+      body: costsBody,
+      margin: { top: yPosition + 10, left: margin.left },
+      styles: {
+        fontSize: 10,  // Smaller font size to fit better
+        cellPadding: 2,  // Reduced padding to minimize row height
+        halign: 'center',  // Center align table content
+        fillColor: [144, 238, 144],  // Soft green background for header
+        textColor: [0, 0, 0],  // Black font color for header
+        lineColor: [0, 0, 0],  // Black border lines for table
+        lineWidth: 0.1,
+      },
+      bodyStyles: {
+        fillColor: [255, 255, 255],  // White background for table data cells
+        textColor: [0, 0, 0],  // Black font color for table data cells
+      }
     });
 
-    // Profit/Loss
+    yPosition = doc.lastAutoTable.finalY + 10;
+
+    // Profit/Loss Section
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
     doc.text(
       `Profit/Loss: ${profitLoss >= 0 ? `Profit ${profitLoss} tk` : `Loss ${Math.abs(profitLoss)} tk`}`,
-      14,
-      doc.autoTable.previous.finalY + 30
+      margin.left,
+      yPosition + 10
     );
 
     // Save the PDF
     doc.save(`Monthly_Report_${selectedMonth}_${selectedYear}.pdf`);
   };
+
+
+
 
 
   return (
@@ -239,132 +393,142 @@ const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
           {/* Fees Table */}
           <h5 className="mt-5">Fees</h5>
           <div className="overflow-auto">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Year</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {fees.length > 0 ? (
-                fees.map((fee, index) => (
-                  <tr key={index}>
-                    <td>{fee.month}</td>
-                    <td>{fee.year}</td>
-                    <td>{fee.amount} tk</td>
-                  </tr>
-                ))
-              ) : (
+            <table className="table table-bordered">
+              <thead>
                 <tr>
-                  <td colSpan="3" className="text-center">
-                    No fees found for the selected month/year.
-                  </td>
+                  <th>Member Name</th>
+                  <th>Member Image</th>
+                  <th>Amount</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {fees.length > 0 ? (
+                  fees.map((fee, index) => (
+                    <tr key={index}>
+                      <td>{fee.memberName}</td> {/* Display member name */}
+                      <td>
+                        {/* Display member image */}
+                        {fee.profileImage ? (
+                          <img src={fee.profileImage} alt={fee.memberName} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+                        ) : (
+                          <span>No image</span>
+                        )}
+                      </td>
+                      <td>{fee.amount} tk</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="text-center">
+                      No fees found for the selected month/year.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
           <h5>Total Fees: {totalFees} tk</h5>
 
           {/* Functional Fees Table */}
           <h5 className="mt-5">Functional Fees</h5>
           <div className="overflow-auto">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Year</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {functionalFees.length > 0 ? (
-                functionalFees.map((fee, index) => (
-                  <tr key={index}>
-                    <td>{fee.month}</td>
-                    <td>{fee.year}</td>
-                    <td>{fee.amount} tk</td>
-                  </tr>
-                ))
-              ) : (
+            <table className="table table-bordered">
+              <thead>
                 <tr>
-                  <td colSpan="3" className="text-center">
-                    No functional fees found for the selected month/year.
-                  </td>
+                  <th>Member Name</th>
+                  <th>Member Image</th>
+                  <th>Amount</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {functionalFees.length > 0 ? (
+                  functionalFees.map((fee, index) => (
+                    <tr key={index}>
+                      <td>{fee.memberName}</td> {/* Display member name */}
+                      <td>
+                        {/* Display member image */}
+                        {fee.profileImage ? (
+                          <img src={fee.profileImage} alt={fee.memberName} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+                        ) : (
+                          <span>No image</span>
+                        )}
+                      </td>
+                      <td>{fee.amount} tk</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="text-center">
+                      No functional fees found for the selected month/year.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
           <h5>Total Functional Fees: {totalFunctionalFees} tk</h5>
 
           {/* Donations Table */}
           <h5 className="mt-5">Donations</h5>
           <div className="overflow-auto">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Year</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {donations.length > 0 ? (
-                donations.map((donation, index) => (
-                  <tr key={index}>
-                    <td>{donation.month}</td>
-                    <td>{donation.year}</td>
-                    <td>{donation.amount} tk</td>
-                  </tr>
-                ))
-              ) : (
+            <table className="table table-bordered">
+              <thead>
                 <tr>
-                  <td colSpan="3" className="text-center">
-                    No donations found for the selected month/year.
-                  </td>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Amount</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {donations.length > 0 ? (
+                  donations.map((donation, index) => (
+                    <tr key={index}>
+                      <td>{donation.name}</td>
+                      <td>{donation.mobile}</td>
+                      <td>{donation.amount} tk</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="text-center">
+                      No donations found for the selected month/year.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
           <h5>Total Donations: {totalDonations} tk</h5>
 
           {/* Costs Table */}
           <h5 className="mt-5">Costs</h5>
           <div className="overflow-auto">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Year</th>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              {costs.length > 0 ? (
-                costs.map((cost, index) => (
-                  <tr key={index}>
-                    <td>{cost.month}</td>
-                    <td>{cost.year}</td>
-                    <td>{cost.name}</td>
-                    <td>{cost.amount} tk</td>
-                    <td>{cost.type}</td>
-                  </tr>
-                ))
-              ) : (
+            <table className="table table-bordered">
+              <thead>
                 <tr>
-                  <td colSpan="5" className="text-center">
-                    No costs found for the selected month/year.
-                  </td>
+                  <th>Name</th>
+                  <th>Amount</th>
+                  <th>Type</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {costs.length > 0 ? (
+                  costs.map((cost, index) => (
+                    <tr key={index}>
+                      <td>{cost.name}</td>
+                      <td>{cost.amount} tk</td>
+                      <td>{cost.type}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="text-center">
+                      No costs found for the selected month/year.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
           <h5>Total Costs: {totalCosts} tk</h5>
 
@@ -374,6 +538,13 @@ const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
           </h5>
         </div>
       </div>
+      <style>
+        {`
+          table th, table td {
+            min-width: 200px !important;
+          }
+        `}
+      </style>
     </div>
   );
 };

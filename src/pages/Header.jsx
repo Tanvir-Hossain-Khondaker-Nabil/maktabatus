@@ -64,12 +64,12 @@ const Header = () => {
             >
               <div className="text-white gap-1 d-flex align-items-center">
                 <img
-                  width="50"
-                  height="50"
-                  src="https://img.icons8.com/fluency/50/user-male-circle--v1.png"
+                  width="46"
+                  height="46"
+                  src="https://img.icons8.com/fluency/46/user-male-circle--v1.png"
                   alt="user-male-circle"
                 />
-                <p className="user-title d-none d-md-block">Tanvir Hossain Khondaker</p>
+                <p className="user-title d-none d-md-block">Maktabatus Salam</p>
               </div>
             </button>
             <ul

@@ -5,15 +5,18 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';  // Import SweetAlert2
 
 const Fees = () => {
   const [functional_fees, setFees] = useState([]);
   const [members, setMembers] = useState([]);
   const navigate = useNavigate();
 
+  // Fetching fees and members data in real-time
   useEffect(() => {
     const unsubscribeFees = onSnapshot(collection(db, 'functional_fees'), (snapshot) => {
-      setFees(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      const fetchedFees = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setFees(fetchedFees);
     });
 
     const unsubscribeMembers = onSnapshot(collection(db, 'members'), (snapshot) => {
@@ -26,24 +29,33 @@ const Fees = () => {
     };
   }, []);
 
+  // Group and sort fees by Month and Year, latest first
   const groupFeesByMonthYear = () => {
-    return functional_fees.reduce((groups, functional_fee) => {
-      const monthYearKey = `${functional_fee.month}-${functional_fee.year}`;
+    const sortedFees = functional_fees.sort((a, b) => {
+      // Compare year first, then month
+      if (b.year === a.year) {
+        return b.month - a.month; // If years are the same, compare months
+      }
+      return b.year - a.year; // Otherwise compare years
+    });
+
+    return sortedFees.reduce((groups, fee) => {
+      const monthYearKey = `${fee.month}-${fee.year}`;
       if (!groups[monthYearKey]) {
         groups[monthYearKey] = [];
       }
-      // Ensure that the amount is treated as a number
-      groups[monthYearKey].push({ ...functional_fee, amount: parseFloat(functional_fee.amount) });
+      groups[monthYearKey].push({ ...fee, amount: parseFloat(fee.amount) });
       return groups;
     }, {});
   };
 
   const groupedFees = groupFeesByMonthYear();
 
+  // Navigate to fee details page when clicking on a month-year
   const viewDetails = (month, year) => {
     const paidMemberIds = functional_fees
-      .filter((functional_fee) => functional_fee.month === month && functional_fee.year === year )
-      .map((functional_fee) => functional_fee.memberId);
+      .filter((fee) => fee.month === month && fee.year === year)
+      .map((fee) => fee.memberId);
 
     const paidMembers = members.filter((member) =>
       paidMemberIds.includes(member.id)
@@ -52,13 +64,22 @@ const Fees = () => {
       (member) => !paidMemberIds.includes(member.id)
     );
 
-    navigate('/functional-fee-details', {
-      state: {
-        month,
-        year,
-        paidMembers,
-        unpaidMembers,
-      },
+    // Show a SweetAlert when navigating
+    Swal.fire({
+      icon: 'info',
+      title: 'Loading Fee Details',
+      text: `Navigating to fee details for ${monthNames[month - 1]} ${year}`,
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      navigate('/functional-fee-details', {
+        state: {
+          month,
+          year,
+          paidMembers,
+          unpaidMembers,
+        },
+      });
     });
   };
 
