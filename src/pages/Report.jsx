@@ -194,7 +194,7 @@ const Report = () => {
     doc.text('Fees', margin.left, yPosition);
 
     // Table headers and body
-    const tableHeader = [['Member Name', 'Amount (tk)', 'Month', 'Year']];
+    const tableHeader = [['Member Name', 'Amount (৳)', 'Month', 'Year']];
     const tableBody = fees.map((fee) => [
       fee.memberName,
       fee.amount,
@@ -240,7 +240,7 @@ const Report = () => {
     // Add Functional Fees Table
     doc.autoTable({
       startY: yPosition + 10,
-      head: [['Member Name', 'Amount (tk)', 'Month', 'Year']],
+      head: [['Member Name', 'Amount (৳)', 'Month', 'Year']],
       body: functionalFeesBody,
       margin: { top: yPosition + 10, left: margin.left },
       styles: {
@@ -274,7 +274,7 @@ const Report = () => {
     // Add Donations Table
     doc.autoTable({
       startY: yPosition + 10,
-      head: [['Name', 'Mobile', 'Amount (tk)']],
+      head: [['Name', 'Mobile', 'Amount (৳)']],
       body: donationsBody,
       margin: { top: yPosition + 10, left: margin.left },
       styles: {
@@ -304,7 +304,7 @@ const Report = () => {
     // Add Costs Table
     doc.autoTable({
       startY: yPosition + 10,
-      head: [['Name', 'Amount (tk)', 'Type']],
+      head: [['Name', 'Amount (৳)', 'Type']],
       body: costsBody,
       margin: { top: yPosition + 10, left: margin.left },
       styles: {
@@ -328,7 +328,7 @@ const Report = () => {
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text(
-      `Profit/Loss: ${profitLoss >= 0 ? `Profit ${profitLoss} tk` : `Loss ${Math.abs(profitLoss)} tk`}`,
+      `Profit/Loss: ${profitLoss >= 0 ? `Profit ${profitLoss} ৳` : `Loss ${Math.abs(profitLoss)} ৳`}`,
       margin.left,
       yPosition + 10
     );
@@ -414,7 +414,7 @@ const Report = () => {
                           <span>No image</span>
                         )}
                       </td>
-                      <td>{fee.amount} tk</td>
+                      <td>{fee.amount} ৳</td>
                     </tr>
                   ))
                 ) : (
@@ -427,7 +427,7 @@ const Report = () => {
               </tbody>
             </table>
           </div>
-          <h5>Total Fees: {totalFees} tk</h5>
+          <h5>Total Fees: {totalFees} ৳</h5>
 
           {/* Functional Fees Table */}
           <h5 className="mt-5">Functional Fees</h5>
@@ -453,7 +453,7 @@ const Report = () => {
                           <span>No image</span>
                         )}
                       </td>
-                      <td>{fee.amount} tk</td>
+                      <td>{fee.amount} ৳</td>
                     </tr>
                   ))
                 ) : (
@@ -466,7 +466,7 @@ const Report = () => {
               </tbody>
             </table>
           </div>
-          <h5>Total Functional Fees: {totalFunctionalFees} tk</h5>
+          <h5>Total Functional Fees: {totalFunctionalFees} ৳</h5>
 
           {/* Donations Table */}
           <h5 className="mt-5">Donations</h5>
@@ -485,7 +485,7 @@ const Report = () => {
                     <tr key={index}>
                       <td>{donation.name}</td>
                       <td>{donation.mobile}</td>
-                      <td>{donation.amount} tk</td>
+                      <td>{donation.amount} ৳</td>
                     </tr>
                   ))
                 ) : (
@@ -498,7 +498,7 @@ const Report = () => {
               </tbody>
             </table>
           </div>
-          <h5>Total Donations: {totalDonations} tk</h5>
+          <h5>Total Donations: {totalDonations} ৳</h5>
 
           {/* Costs Table */}
           <h5 className="mt-5">Costs</h5>
@@ -516,7 +516,7 @@ const Report = () => {
                   costs.map((cost, index) => (
                     <tr key={index}>
                       <td>{cost.name}</td>
-                      <td>{cost.amount} tk</td>
+                      <td>{cost.amount} ৳</td>
                       <td>{cost.type}</td>
                     </tr>
                   ))
@@ -530,11 +530,11 @@ const Report = () => {
               </tbody>
             </table>
           </div>
-          <h5>Total Costs: {totalCosts} tk</h5>
+          <h5>Total Costs: {totalCosts} ৳</h5>
 
           {/* Profit/Loss */}
           <h5 className="mt-5">
-            Profit/Loss: {profitLoss >= 0 ? `Profit ${profitLoss} tk` : `Loss ${Math.abs(profitLoss)} tk`}
+            Profit/Loss: {profitLoss >= 0 ? `Profit ${profitLoss} ৳` : `Loss ${Math.abs(profitLoss)} ৳`}
           </h5>
         </div>
       </div>

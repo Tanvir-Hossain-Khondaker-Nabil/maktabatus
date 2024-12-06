@@ -106,7 +106,7 @@ const Home = () => {
                 <h6>Total Fees</h6>
               </div>
               <div className="custom-card-body text-center">
-                <h4 className="fw-bold">{totalFees} tk</h4>
+                <h4 className="fw-bold">{totalFees} ৳</h4>
               </div>
             </div>
           </div>
@@ -116,7 +116,7 @@ const Home = () => {
                 <h6>Total Functional Fees</h6>
               </div>
               <div className="custom-card-body text-center">
-                <h4 className="fw-bold">{totalFunctionalFees} tk</h4>
+                <h4 className="fw-bold">{totalFunctionalFees} ৳</h4>
               </div>
             </div>
           </div>
@@ -126,7 +126,7 @@ const Home = () => {
                 <h6>Total Costs</h6>
               </div>
               <div className="custom-card-body text-center">
-                <h4 className="fw-bold">{totalCosts} tk</h4>
+                <h4 className="fw-bold">{totalCosts} ৳</h4>
               </div>
             </div>
           </div>

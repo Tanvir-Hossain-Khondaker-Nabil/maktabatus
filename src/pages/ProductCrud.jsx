@@ -355,7 +355,7 @@ const ProductCrud = () => {
                           {categories.find((cat) => cat.id === product.categoryId)
                             ?.name || "N/A"}
                         </td>
-                        <td>৳{product.price}</td>
+                        <td>{product.price} ৳</td>
                         <td>{product.quantity}</td>
                         <td>
                           {product.image && (

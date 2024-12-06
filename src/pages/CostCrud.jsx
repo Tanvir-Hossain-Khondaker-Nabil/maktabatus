@@ -186,7 +186,7 @@ const CostCrud = () => {
     const header = ['Field', 'Details'];
     const data = [
       ['Type', cost.type],
-      ['Amount', `${cost.amount} tk`],
+      ['Amount', `${cost.amount} ৳`],
       ['Month', cost.month],
       ['Year', cost.year],
       ['Description', cost.description],
@@ -332,7 +332,7 @@ const CostCrud = () => {
                   <tr key={cost.id}>
                     <td>{cost.name}</td>
                     <td>{cost.type}</td>
-                    <td>{cost.amount} tk</td>
+                    <td>{cost.amount} ৳</td>
                     <td>{cost.month}</td>
                     <td>{cost.year}</td>
                     <td>{cost.description}</td>

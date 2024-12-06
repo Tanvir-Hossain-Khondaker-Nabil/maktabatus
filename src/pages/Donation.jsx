@@ -5,9 +5,12 @@ import {
   onSnapshot,
   deleteDoc,
   doc,
+  updateDoc,
 } from 'firebase/firestore';
 import { db } from '../firebase';
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const Donation = () => {
   const [donationData, setDonationData] = useState({
@@ -17,13 +20,23 @@ const Donation = () => {
     month: '',
     year: new Date().getFullYear(),
   });
-
   const [error, setError] = useState('');
-  const [donations, setDonations] = useState([]); // State to store the list of donations
+  const [donations, setDonations] = useState([]);
+  const [editId, setEditId] = useState(null);
 
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-    'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   // Fetch donations from Firestore
@@ -49,7 +62,6 @@ const Donation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation checks for required fields
     if (!donationData.amount || !donationData.month) {
       setError('Amount and Month are required!');
       Swal.fire({
@@ -61,17 +73,27 @@ const Donation = () => {
       return;
     }
 
-    // Reset error if validation passes
     setError('');
 
     try {
-      // Insert the new donation into Firebase
-      await addDoc(collection(db, 'donations'), donationData);
+      if (editId) {
+        await updateDoc(doc(db, 'donations', editId), donationData);
+        Swal.fire({
+          title: 'Updated!',
+          text: 'Donation updated successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+      } else {
+        await addDoc(collection(db, 'donations'), donationData);
+        Swal.fire({
+          title: 'Success!',
+          text: 'Donation submitted successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+      }
 
-      // After successful insert, log the data (optional)
-      console.log('Donation Data Submitted:', donationData);
-
-      // Reset form after submission
       setDonationData({
         name: '',
         mobile: '',
@@ -79,16 +101,8 @@ const Donation = () => {
         month: '',
         year: new Date().getFullYear(),
       });
-
-      // Show success message
-      Swal.fire({
-        title: 'Success!',
-        text: 'Donation Submitted Successfully!',
-        icon: 'success',
-        confirmButtonText: 'OK',
-      });
+      setEditId(null);
     } catch (error) {
-      console.error('Error adding document: ', error);
       Swal.fire({
         title: 'Error!',
         text: 'Error submitting donation!',
@@ -96,6 +110,11 @@ const Donation = () => {
         confirmButtonText: 'Try Again',
       });
     }
+  };
+
+  const handleEdit = (donation) => {
+    setDonationData(donation);
+    setEditId(donation.id);
   };
 
   const handleDelete = async (id) => {
@@ -108,7 +127,6 @@ const Donation = () => {
         confirmButtonText: 'OK',
       });
     } catch (error) {
-      console.error('Error deleting document: ', error);
       Swal.fire({
         title: 'Error!',
         text: 'Error deleting donation!',
@@ -117,18 +135,61 @@ const Donation = () => {
       });
     }
   };
+  const generatePDFVoucher = (donation) => {
+    const doc = new jsPDF();
   
+    // Title
+    doc.setFontSize(16);
+    doc.text(`Donation Voucher`, 20, 20);
+  
+    // Add a table with customized styles
+    doc.autoTable({
+      startY: 40, // Start position for the table
+      head: [['Field', 'Details']],
+      body: [
+        ['Name', donation.name || 'Anonymous'],
+        ['Mobile', donation.mobile || 'N/A'],
+        ['Amount', `${donation.amount} tk`],
+        ['Month', donation.month],
+        ['Year', donation.year],
+      ],
+      margin: { top: 10, left: 20 },
+      headStyles: {
+        fillColor: [144, 238, 144], // Soft green background for header
+        textColor: [0, 0, 0], // Black text for header
+        fontSize: 12, // Font size for header
+      },
+      bodyStyles: {
+        fillColor: [255, 255, 255], // White background for table data cells
+        textColor: [0, 0, 0], // Black font color for table data cells
+        fontSize: 10, // Smaller font size for table data
+      },
+      alternateRowStyles: {
+        fillColor: [245, 245, 245], // Light gray background for alternate rows
+      },
+      styles: {
+        lineColor: [0, 0, 0], // Black border lines for table
+        lineWidth: 0.1, // Thin lines
+        halign: 'center', // Center align table content
+      },
+    });
+  
+    // Save the PDF
+    doc.save(`Donation_Voucher_${donation.name || 'Anonymous'}.pdf`);
+  };
+  
+  
+
   return (
     <div className="card">
       <div className="card-body">
-        <h2 className="title">Member Management</h2>        
+        <h2 className="title">Donation Management</h2>
         <form className="form" onSubmit={handleSubmit}>
-          <div className="container"> {/* Added container wrapper */}
+          <div className="container">
             <div className="row">
               <div className="col-md-4 mb-3">
                 <input
                   type="text"
-                  id="name"
                   name="name"
                   className="input-field"
                   value={donationData.name}
@@ -136,11 +197,9 @@ const Donation = () => {
                   placeholder="Enter your name (optional)"
                 />
               </div>
-
               <div className="col-md-4 mb-3">
                 <input
                   type="text"
-                  id="mobile"
                   name="mobile"
                   className="input-field"
                   value={donationData.mobile}
@@ -148,11 +207,9 @@ const Donation = () => {
                   placeholder="Enter your mobile number (optional)"
                 />
               </div>
-
               <div className="col-md-4 mb-3">
                 <input
                   type="number"
-                  id="amount"
                   name="amount"
                   className="input-field"
                   value={donationData.amount}
@@ -160,15 +217,12 @@ const Donation = () => {
                   placeholder="Amount"
                 />
               </div>
-
               <div className="col-md-4 mb-3">
                 <select
-                  id="month"
                   name="month"
                   className="input-field"
                   value={donationData.month}
                   onChange={handleChange}
-                  required
                 >
                   <option value="">Select Month</option>
                   {monthNames.map((month, index) => (
@@ -178,72 +232,78 @@ const Donation = () => {
                   ))}
                 </select>
               </div>
-
               <div className="col-md-4 mb-3">
                 <input
                   type="text"
-                  id="year"
                   name="year"
                   className="input-field"
                   value={donationData.year}
                   readOnly
                 />
               </div>
-
               <div className="col-md-4 mb-3">
                 <button type="submit" className="btn add-btn">
-                  Add
+                  {editId ? 'Update' : 'Add'}
                 </button>
               </div>
             </div>
           </div>
         </form>
 
-
-        {/* Donations Table */}
         <div className="mt-5 overflow-auto">
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Mobile</th>
-                  <th>Amount</th>
-                  <th>Month</th>
-                  <th>Year</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Amount</th>
+                <th>Month</th>
+                <th>Year</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
               {donations.length > 0 ? (
                 donations.map((donation) => (
                   <tr key={donation.id}>
-                    <td>{donation.name}</td>
-                    <td>{donation.mobile}</td>
-                    <td>{donation.amount}</td>
+                    <td>{donation.name || 'Anonymous'}</td>
+                    <td>{donation.mobile || 'N/A'}</td>
+                    <td>{donation.amount} ৳</td>
                     <td>{donation.month}</td>
                     <td>{donation.year}</td>
                     <td>
-                      <div className="d-flex justify-content-center align-item-center">
-                      <button
-                            className="btn action-btn btn-sm mr-2"
-                            onClick={() => handleDelete(donation.id)}
-                          >
-                            <i className="fa-solid fa-trash"></i>
-                          </button>
+                      <div className="d-flex">
+                        <button
+                          className="btn action-btn btn-sm mr-2"
+                          onClick={() => handleEdit(donation)}
+                        >
+                          <i className="fa-solid fa-edit"></i>
+                        </button>
+                        <button
+                          className="btn action-btn btn-sm mr-2"
+                          onClick={() => handleDelete(donation.id)}
+                        >
+                          <i className="fa-solid fa-trash"></i>
+                        </button>
+                        <button
+                          className="btn action-btn btn-sm"
+                          onClick={() => generatePDFVoucher(donation)}
+                        >
+                          <i className="fa-solid fa-file-pdf"></i>
+                        </button>
                       </div>
                     </td>
                   </tr>
                 ))
-
               ) : (
-                    <tr>
-                      <td colSpan="6" className="text-center">
-                        No borrowed books found.
-                      </td>
-                    </tr>
-                  )}
-              </tbody>
-            </table>
+                <tr>
+                  <td colSpan="6" className="text-center">
+                    No donations found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
