@@ -11,6 +11,7 @@ import { db } from '../firebase';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 import { jsPDF } from 'jspdf'; // Import jsPDF for PDF generation
 
+
 const CostCrud = () => {
   const currentYear = new Date().getFullYear(); // Get the current year
 

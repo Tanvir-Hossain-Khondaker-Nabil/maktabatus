@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { db } from '../firebase';
 import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 
+
 const FeeDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();

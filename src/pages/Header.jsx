@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // For navigation on logout
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase"; // Import Firebase auth for logout
+import { auth } from "../firebase"; 
 
 const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);

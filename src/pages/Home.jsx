@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import {
   collection,
   getDocs,
 } from 'firebase/firestore';
 import { db } from '../firebase';
+
 
 const Home = () => {
   const [membersCount, setMembersCount] = useState(0);
@@ -12,6 +14,8 @@ const Home = () => {
   const [totalFees, setTotalFees] = useState(0);
   const [totalFunctionalFees, setTotalFunctionalFees] = useState(0);
   const [totalCosts, setTotalCosts] = useState(0);
+  const [totalDonations, setTotalDonations] = useState(0); // Added donations state
+  const [currentValue, setCurrentValue] = useState(0); // Added current value state
 
   useEffect(() => {
     // Fetch members count
@@ -57,18 +61,35 @@ const Home = () => {
       setTotalCosts(total);
     };
 
+    // Fetch total donations sum
+    const fetchTotalDonations = async () => {
+      const snapshot = await getDocs(collection(db, 'donations'));
+      const total = snapshot.docs.reduce((acc, doc) => Number(acc) + Number(doc.data().amount), 0);
+      setTotalDonations(total);
+    };
+
+    // Calculate current value
+    const calculateCurrentValue = () => {
+      const current = totalFees + totalFunctionalFees + totalDonations - totalCosts;
+      setCurrentValue(current);
+    };
+
     fetchMembersCount();
     fetchProductsCount();
     fetchBorrowedProductsCount();
     fetchTotalFees();
     fetchTotalCosts();
-    fetchTotalFunctionalFees()
-  }, []);
+    fetchTotalFunctionalFees();
+    fetchTotalDonations();
+
+    // Calculate the current value after all data is fetched
+    calculateCurrentValue();
+  }, [totalFees, totalFunctionalFees, totalDonations, totalCosts]); // Adding dependencies to recalculate when these values change
 
   return (
     <div className="card">
       <div className="card-body">
-        <h2 className="title">Dashboard</h2>
+        <h2 className="title">Deshboard</h2>
         <div className="row mt-2">
           <div className="col-md-4">
             <div className="custom-card primary-bg mb-4">
@@ -127,6 +148,26 @@ const Home = () => {
               </div>
               <div className="custom-card-body text-center">
                 <h4 className="fw-bold">{totalCosts} ৳</h4>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="custom-card danger-bg mb-4">
+              <div className="custom-card-header text-center">
+                <h6>Total Donations</h6>
+              </div>
+              <div className="custom-card-body text-center">
+                <h4 className="fw-bold">{totalDonations} ৳</h4>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="custom-card danger-bg mb-4">
+              <div className="custom-card-header text-center">
+                <h6>Current Value</h6>
+              </div>
+              <div className="custom-card-body text-center">
+                <h4 className="fw-bold">{currentValue} ৳</h4>
               </div>
             </div>
           </div>
