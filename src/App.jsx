@@ -11,7 +11,6 @@ import CategoryCrud from './pages/CategoryCrud';
 import BorrowBook from './pages/BorrowBook';
 import CostCrud from './pages/CostCrud';
 import Home from './pages/Home';
-import Index from './pages/Index';
 import Report from './pages/Report';
 import Donation from './pages/Donation';
 import LoginForm from './pages/LoginForm';
