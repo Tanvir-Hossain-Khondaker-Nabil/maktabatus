@@ -18,7 +18,7 @@ import Fees from './pages/Fees';
 import FunctionalFees from './pages/FunctionalFees';
 import FeeDetails from './pages/FeeDetails';
 import FunctionalFeeDetails from './pages/FunctionalFeeDetails';
-import("./style.css");
+import './style.css'
 
 // Dynamically import CSS based on the route
 const App = () => {
